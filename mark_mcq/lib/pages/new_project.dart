@@ -4,6 +4,7 @@ import 'camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class NewProject extends StatefulWidget {
   const NewProject({super.key});
@@ -181,7 +182,6 @@ class _NewProjectState extends State<NewProject> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Add search functionality
                       setPath();
                     },
                     style: ButtonStyle(
@@ -197,14 +197,49 @@ class _NewProjectState extends State<NewProject> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 50,
+            ),
+            SizedBox(
+              width: 500,
+              height: 100,
+              // Here, default theme colors are used for activeBgColor, activeFgColor, inactiveBgColor and inactiveFgColor
+              child: ToggleSwitch(
+                minWidth: 164.6,
+                minHeight: 100.0,
+                initialLabelIndex: null,
+                cornerRadius: 4.0,
+                activeFgColor: Colors.white,
+                inactiveBgColor: const Color.fromARGB(255, 255, 255, 255),
+                inactiveFgColor: const Color.fromARGB(255, 0, 0, 0),
+                totalSwitches: 3,
+                icons: const [
+                  Icons.view_column_rounded,
+                  Icons.view_column_rounded,
+                  Icons.view_column_rounded,
+                ],
+                iconSize: 50.0,
+                borderWidth: 2.0,
+                borderColor: const [Color.fromARGB(255, 66, 165, 245)],
+                dividerColor: const Color.fromARGB(255, 66, 165, 245),
+                activeBgColors: const [
+                  [Color.fromARGB(255, 8, 117, 225)],
+                  [Color.fromARGB(255, 8, 117, 225)],
+                  [Color.fromARGB(255, 8, 117, 225)],
+                ],
+                onToggle: (index) {
+                  print('switched to: $index');
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             SizedBox(
               width: 510,
-              height: 200,
+              height: 100,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceEvenly, // Adjust the alignment as needed
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Adjust the alignment as needed
                 children: [
                   Container(
                     decoration: BoxDecoration(
@@ -235,13 +270,13 @@ class _NewProjectState extends State<NewProject> {
                             },
                           ),
                           minimumSize: MaterialStateProperty.all(const Size(
-                              240, 200)), // Set the button height to 30
+                              150, 100)), // Set the button height to 30
                           backgroundColor: MaterialStateProperty.all<Color>(
                             Color.fromRGBO(255, 255, 255, 1),
                           ),
                         ),
                         child: const Icon(Icons.camera_alt,
-                            color: Colors.black, size: 150),
+                            color: Colors.black, size: 50),
                       );
                     }),
                   ),
@@ -273,7 +308,7 @@ class _NewProjectState extends State<NewProject> {
                           },
                         ),
                         minimumSize: MaterialStateProperty.all(const Size(
-                            240, 200)), // Set the button height to 30
+                            150, 100)), // Set the button height to 30
                         backgroundColor: MaterialStateProperty.all<Color>(
                           const Color.fromARGB(255, 255, 255, 255),
                         ),
@@ -281,7 +316,7 @@ class _NewProjectState extends State<NewProject> {
                       child: const Icon(
                         Icons.drive_folder_upload,
                         color: Colors.black,
-                        size: 150,
+                        size: 50,
                       ),
                     ),
                   ),
