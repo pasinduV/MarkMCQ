@@ -41,6 +41,7 @@ dependencies:
   permission_handler: ^11.0.1
   file_picker: ^5.2.10
   image_picker: ^1.0.4
+  toggle_switch: ^2.1.0
 
 dev_dependencies:
   flutter_test:
