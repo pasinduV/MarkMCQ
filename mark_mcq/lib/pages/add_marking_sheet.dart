@@ -32,23 +32,35 @@ class AddMarkingSheet extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    //Camera Feed
-                    width: 600,
-                    height: 400,
-                    color: Colors.black,
-                    child: Text(
-                      'Video Feed',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 0.02,
-                      ),
+                  // MCQ answer input section
+                  for (int i = 0; i < 5; i++)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        for (int j = 0; j < 5; j++)
+                          Container(
+                            width: 40,
+                            height: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black38,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              maxLength:
+                                  1, // Restrict input to a single digit (1-5)
+                            ),
+                          ),
+                      ],
                     ),
-                    alignment: Alignment.center,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
