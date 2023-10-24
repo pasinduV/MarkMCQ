@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
+  camera_windows
   file_selector_windows
   permission_handler_windows
   screen_retriever
