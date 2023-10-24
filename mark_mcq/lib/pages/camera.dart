@@ -3,7 +3,9 @@ import 'dart:io';
 import 'add_marking_sheet.dart';
 
 class CameraSelect extends StatelessWidget {
-  const CameraSelect({super.key});
+  final String originalDir; // Define a variable to hold the string
+
+  const CameraSelect({super.key, required this.originalDir});
 
   @override
   Widget build(BuildContext context) {
