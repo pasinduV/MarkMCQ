@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'dart:io';
+=======
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+>>>>>>> Stashed changes
 import 'add_marking_sheet.dart';
 
 class CameraSelect extends StatelessWidget {
@@ -22,6 +27,7 @@ class CameraSelect extends StatelessWidget {
             opacity: 220,
             fit: BoxFit.fill, // Adjust the fit as needed
           ),
+<<<<<<< Updated upstream
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -45,6 +51,64 @@ class CameraSelect extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                         letterSpacing: 0.02,
+=======
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_cameras.isEmpty)
+                ElevatedButton(
+                  onPressed: _fetchCameras,
+                  child: const Text('Re-check available cameras'),
+                ),
+              if (_cameras.isNotEmpty)
+                SizedBox(
+                  width: 600,
+                  height: 500,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          if (_cameras.length > 1) ...<Widget>[
+                            ElevatedButton(
+                              onPressed: _switchCamera,
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  const Color.fromARGB(255, 8, 117, 225),
+                                ),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .center, // You can adjust alignment as needed
+                                children: [
+                                  Icon(
+                                    Icons.switch_camera_outlined,
+                                    color: Colors
+                                        .white, // You can customize the icon color
+                                    size: 20,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        10, // Adjust the spacing between the icon and text
+                                  ),
+                                  Text(
+                                    'Switch Camera',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.02,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+>>>>>>> Stashed changes
                       ),
                     ),
                     alignment: Alignment.center,
@@ -240,10 +304,52 @@ class CameraSelect extends StatelessWidget {
                                       .white, // You can customize the icon color
                                   size: 20,
                                 ),
+<<<<<<< Updated upstream
                                 SizedBox(
                                   width:
                                       10, // Adjust the spacing between the icon and text
                                 ),
+=======
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 35,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Builder(builder: (context) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const AddMarkingSheet(),
+                              ));
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 8, 117, 225),
+                              ),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, // You can adjust alignment as needed
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: Colors
+                                      .white, // You can customize the icon color
+                                  size: 20,
+                                ),
+                                SizedBox(
+                                  width:
+                                      10, // Adjust the spacing between the icon and text
+                                ),
+>>>>>>> Stashed changes
                                 Text(
                                   'Add Marking Sheet',
                                   style: TextStyle(
@@ -258,10 +364,17 @@ class CameraSelect extends StatelessWidget {
                             ),
                           );
                         }),
+<<<<<<< Updated upstream
                       ),
                     ],
                   ),
                 ],
+=======
+                      ],
+                    ),
+                  ],
+                ),
+>>>>>>> Stashed changes
               ),
             )
           ],
