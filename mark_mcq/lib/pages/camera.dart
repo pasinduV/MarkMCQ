@@ -4,6 +4,7 @@ import 'package:camera_platform_interface/camera_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'add_marking_sheet.dart';
 
 String originalImgDir = '';
 
@@ -253,9 +254,7 @@ class _CameraSelectState extends State<CameraSelect> {
                         children: <Widget>[
                           if (_cameras.length > 1) ...<Widget>[
                             ElevatedButton(
-                              onPressed: _initialized
-                                  ? _disposeCurrentCamera
-                                  : _initializeCamera,
+                              onPressed: _switchCamera,
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
@@ -486,7 +485,8 @@ class _CameraSelectState extends State<CameraSelect> {
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.02,
-                              color: Colors.white, // Set text color
+                              color: Color.fromARGB(
+                                  255, 0, 0, 0), // Set text color
                             ),
                             decoration: InputDecoration(
                               contentPadding:
@@ -536,43 +536,48 @@ class _CameraSelectState extends State<CameraSelect> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        ElevatedButton(
-                          onPressed: _initialized
-                              ? _disposeCurrentCamera
-                              : _initializeCamera,
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 8, 117, 225),
+                        Builder(builder: (context) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              // Navigate to the CameraSelect screen
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const AddMarkingSheet(),
+                              ));
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromARGB(255, 8, 117, 225),
+                              ),
                             ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment
-                                .center, // You can adjust alignment as needed
-                            children: [
-                              Icon(
-                                Icons.add,
-                                color: Colors
-                                    .white, // You can customize the icon color
-                                size: 20,
-                              ),
-                              SizedBox(
-                                width:
-                                    10, // Adjust the spacing between the icon and text
-                              ),
-                              Text(
-                                'Add Marking Sheet',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: 'Roboto',
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.02,
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, // You can adjust alignment as needed
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: Colors
+                                      .white, // You can customize the icon color
+                                  size: 20,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
+                                SizedBox(
+                                  width:
+                                      10, // Adjust the spacing between the icon and text
+                                ),
+                                Text(
+                                  'Add Marking Sheet',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontFamily: 'Roboto',
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.02,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ],
