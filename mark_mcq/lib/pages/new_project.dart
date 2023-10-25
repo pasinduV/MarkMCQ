@@ -256,7 +256,7 @@ class _NewProjectState extends State<NewProject> {
                           // Navigate to the CameraSelect screen
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
-                                CameraSelect(originalDir: originalImageDir),
+                                CameraSelect(originalImageDir),
                           ));
                         },
                         style: ButtonStyle(
