@@ -5,11 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+String originalImgDir = '';
+
 class CameraSelect extends StatefulWidget {
-  final String originalDir;
+  //final String originalDir;
 
   /// Default Constructor
-  const CameraSelect({super.key, required this.originalDir});
+  //const CameraSelect({super.key, required this.originalDir}):originalImgDir=originalDir;
+  CameraSelect(String txt, {super.key}) {
+    originalImgDir = txt;
+  }
 
   @override
   State<CameraSelect> createState() => _CameraSelectState();
@@ -24,7 +29,7 @@ class _CameraSelectState extends State<CameraSelect> {
   final ResolutionPreset _resolutionPreset = ResolutionPreset.veryHigh;
   StreamSubscription<CameraErrorEvent>? _errorStreamSubscription;
   StreamSubscription<CameraClosingEvent>? _cameraClosingStreamSubscription;
-  String _lastImagePath = 'C:/Users/Asus/Downloads/user-avatar.png';
+  String _lastImagePath = 'Photos/1.jpg';
 
   @override
   void initState() {
@@ -163,7 +168,7 @@ class _CameraSelectState extends State<CameraSelect> {
     final DateTime now = DateTime.now();
     final String timestamp = now.millisecondsSinceEpoch.toString();
     final fileName = 'image_$timestamp.jpg';
-    final imageDir = 'C:/Users/Asus/Downloads/$fileName';
+    final imageDir = '$originalImgDir/$fileName';
     await imageFile.saveTo(imageDir);
     // Use the imageFile for further processing or display
     setState(() {
