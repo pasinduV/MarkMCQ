@@ -223,9 +223,9 @@ class _NewProjectState extends State<NewProject> {
                 borderColor: const [Color.fromARGB(255, 66, 165, 245)],
                 dividerColor: const Color.fromARGB(255, 66, 165, 245),
                 activeBgColors: const [
-                  [Color.fromARGB(255, 225, 178, 8)],
                   [Color.fromARGB(255, 8, 117, 225)],
-                  [Color.fromARGB(255, 55, 225, 8)],
+                  [Color.fromARGB(255, 8, 117, 225)],
+                  [Color.fromARGB(255, 8, 117, 225)],
                 ],
                 onToggle: (index) {
                   mcqSheetFormatIndex = index!;

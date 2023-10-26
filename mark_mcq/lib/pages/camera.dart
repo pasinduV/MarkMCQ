@@ -15,7 +15,7 @@ class CameraSelect extends StatefulWidget {
   CameraSelect(String txt, int index, {super.key}) {
     originalImgDir = txt;
     mcqSheetFormatIndex = index;
-    print("index passed to second screen: $mcqSheetFormatIndex");
+    print("index passed to second screen: $mcqSheetFormatIndex"); //test
   }
 
   @override

@@ -7,7 +7,7 @@ class AddMarkingSheet extends StatelessWidget {
 
   AddMarkingSheet(int index, {super.key}) {
     mcqSheetFormatIndex = index;
-    print("index passed to third screen: $mcqSheetFormatIndex");
+    print("index passed to third screen: $mcqSheetFormatIndex"); //test
   }
 
   @override
@@ -40,6 +40,11 @@ class AddMarkingSheet extends StatelessWidget {
       default:
         break;
     }
+    List<List<String>> gridValues =
+        List.generate(rows, (_) => List.filled(cols, ""), growable: false);
+
+    int questionNum;
+
     return Scaffold(
       body: Container(
         width: 1920,
@@ -67,27 +72,41 @@ class AddMarkingSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         for (int j = 0; j < cols; j++)
-                          Container(
-                            width: 40,
-                            height: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black38,
-                                width: 1.0,
+                          Row(children: [
+                            Container(
+                              width: 20,
+                              height: 40,
+                              child: Text(
+                                (i * cols + j + 1).toString(),
                               ),
-                              borderRadius: BorderRadius.circular(4),
                             ),
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
+                            Container(
+                              width: 40,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black38,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(4),
                               ),
-                              maxLength:
-                                  1, // Restrict input to a single digit (1-5)
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  counterText: '',
+                                ),
+                                maxLength:
+                                    1, // Restrict input to a single digit (1-5)
+                                onChanged: (value) {
+                                  gridValues[i][j] =
+                                      value; // Store the input value in the array
+                                },
+                              ),
                             ),
-                          ),
+                          ]),
                       ],
                     ),
                   Row(
@@ -108,6 +127,13 @@ class AddMarkingSheet extends StatelessWidget {
                         child: Builder(builder: (context) {
                           return ElevatedButton(
                             onPressed: () {
+                              //print for test
+                              for (int i = 0; i < rows; i++) {
+                                for (int j = 0; j < cols; j++) {
+                                  print(
+                                      "${i * cols + j + 1}: ${gridValues[i][j]}");
+                                }
+                              }
                               // Navigate to the AddMarkingShhet screen
                             },
                             style: ButtonStyle(
