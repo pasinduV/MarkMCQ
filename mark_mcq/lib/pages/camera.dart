@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-String originalImgDir = '';
+String originalImgDir = ''; //captured images are saved to this directory
 
 class CameraSelect extends StatefulWidget {
-  //final String originalDir;
-
   /// Default Constructor
-  //const CameraSelect({super.key, required this.originalDir}):originalImgDir=originalDir;
   CameraSelect(String txt, {super.key}) {
-    originalImgDir = txt;
+    originalImgDir = txt; //value for txt is passed from 'new_project.dart' page
   }
 
   @override
@@ -164,7 +161,6 @@ class _CameraSelectState extends State<CameraSelect> {
   Future<void> _takePicture() async {
     final XFile imageFile =
         await CameraPlatform.instance.takePicture(_cameraId);
-    final directory = await getApplicationDocumentsDirectory();
     final DateTime now = DateTime.now();
     final String timestamp = now.millisecondsSinceEpoch.toString();
     final fileName = 'image_$timestamp.jpg';
