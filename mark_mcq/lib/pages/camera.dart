@@ -10,6 +10,7 @@ String originalImgDir = '';
 
 class CameraSelect extends StatefulWidget {
   /// Default Constructor
+
   CameraSelect(String txt, {super.key}) {
     originalImgDir = txt;
   }
@@ -71,7 +72,6 @@ class _CameraSelectState extends State<CameraSelect> {
   }
 
   /// Initializes the camera on the device.
-
   Future<void> _initializeCamera() async {
     assert(!_initialized);
 
@@ -214,6 +214,16 @@ class _CameraSelectState extends State<CameraSelect> {
     }
   }
 
+  void deleteFile(String filePath) {
+    File file = File(filePath);
+    file.deleteSync();
+  }
+
+  Future<void> _retakePicture(String replaceFileDir) async {
+    deleteFile(replaceFileDir);
+    _takePicture();
+  }
+
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -326,7 +336,7 @@ class _CameraSelectState extends State<CameraSelect> {
                             child: Builder(builder: (context) {
                               return ElevatedButton(
                                 onPressed: () {
-                                  // Use a Builder to access the context
+                                  _retakePicture(_lastImagePath);
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateColor.resolveWith(
@@ -537,6 +547,7 @@ class _CameraSelectState extends State<CameraSelect> {
                           return ElevatedButton(
                             onPressed: () {
                               // Navigate to the CameraSelect screen
+                              _disposeCurrentCamera(); //close opned camera before moving to next screem
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const AddMarkingSheet(),
                               ));
