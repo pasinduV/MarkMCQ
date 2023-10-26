@@ -7,12 +7,15 @@ import 'package:path_provider/path_provider.dart';
 import 'add_marking_sheet.dart';
 
 String originalImgDir = '';
+int mcqSheetFormatIndex = 0;
 
 class CameraSelect extends StatefulWidget {
   /// Default Constructor
 
-  CameraSelect(String txt, {super.key}) {
+  CameraSelect(String txt, int index, {super.key}) {
     originalImgDir = txt;
+    mcqSheetFormatIndex = index;
+    print("index passed to second screen: $mcqSheetFormatIndex");
   }
 
   @override
@@ -214,6 +217,7 @@ class _CameraSelectState extends State<CameraSelect> {
     }
   }
 
+  //delete file(for retake function)
   void deleteFile(String filePath) {
     File file = File(filePath);
     file.deleteSync();
@@ -549,7 +553,8 @@ class _CameraSelectState extends State<CameraSelect> {
                               // Navigate to the CameraSelect screen
                               _disposeCurrentCamera(); //close opned camera before moving to next screem
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AddMarkingSheet(),
+                                builder: (context) =>
+                                    AddMarkingSheet(mcqSheetFormatIndex),
                               ));
                             },
                             style: ButtonStyle(

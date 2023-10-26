@@ -3,7 +3,12 @@ import 'dart:io';
 import 'show_marked_sheets.dart';
 
 class AddMarkingSheet extends StatelessWidget {
-  const AddMarkingSheet({super.key});
+  int mcqSheetFormatIndex = 0;
+
+  AddMarkingSheet(int index, {super.key}) {
+    mcqSheetFormatIndex = index;
+    print("index passed to third screen: $mcqSheetFormatIndex");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +16,30 @@ class AddMarkingSheet extends StatelessWidget {
   }
 
   Scaffold body() {
+    int cols = 0;
+    int rows = 0;
+    switch (mcqSheetFormatIndex) {
+      case 0:
+        {
+          rows = 5;
+          cols = 5;
+          break;
+        }
+      case 1:
+        {
+          rows = 8;
+          cols = 5;
+          break;
+        }
+      case 2:
+        {
+          rows = 10;
+          cols = 5;
+          break;
+        }
+      default:
+        break;
+    }
     return Scaffold(
       body: Container(
         width: 1920,
@@ -33,11 +62,11 @@ class AddMarkingSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // MCQ answer input section
-                  for (int i = 0; i < 5; i++)
+                  for (int i = 0; i < rows; i++)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        for (int j = 0; j < 5; j++)
+                        for (int j = 0; j < cols; j++)
                           Container(
                             width: 40,
                             height: 40,
