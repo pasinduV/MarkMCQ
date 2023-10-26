@@ -9,10 +9,7 @@ import 'add_marking_sheet.dart';
 String originalImgDir = '';
 
 class CameraSelect extends StatefulWidget {
-  //final String originalDir;
-
   /// Default Constructor
-  //const CameraSelect({super.key, required this.originalDir}):originalImgDir=originalDir;
   CameraSelect(String txt, {super.key}) {
     originalImgDir = txt;
   }
