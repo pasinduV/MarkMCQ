@@ -7,14 +7,15 @@ import 'package:path_provider/path_provider.dart';
 import 'add_marking_sheet.dart';
 
 String originalImgDir = '';
+int mcqSheetFormatIndex = 0;
 
 class CameraSelect extends StatefulWidget {
-  //final String originalDir;
-
   /// Default Constructor
-  //const CameraSelect({super.key, required this.originalDir}):originalImgDir=originalDir;
-  CameraSelect(String txt, {super.key}) {
+
+  CameraSelect(String txt, int index, {super.key}) {
     originalImgDir = txt;
+    mcqSheetFormatIndex = index;
+    print("index passed to second screen: $mcqSheetFormatIndex"); //test
   }
 
   @override
@@ -74,7 +75,6 @@ class _CameraSelectState extends State<CameraSelect> {
   }
 
   /// Initializes the camera on the device.
-
   Future<void> _initializeCamera() async {
     assert(!_initialized);
 
@@ -217,6 +217,17 @@ class _CameraSelectState extends State<CameraSelect> {
     }
   }
 
+  //delete file(for retake function)
+  void deleteFile(String filePath) {
+    File file = File(filePath);
+    file.deleteSync();
+  }
+
+  Future<void> _retakePicture(String replaceFileDir) async {
+    deleteFile(replaceFileDir);
+    _takePicture();
+  }
+
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -329,7 +340,7 @@ class _CameraSelectState extends State<CameraSelect> {
                             child: Builder(builder: (context) {
                               return ElevatedButton(
                                 onPressed: () {
-                                  // Use a Builder to access the context
+                                  _retakePicture(_lastImagePath);
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateColor.resolveWith(
@@ -540,8 +551,10 @@ class _CameraSelectState extends State<CameraSelect> {
                           return ElevatedButton(
                             onPressed: () {
                               // Navigate to the CameraSelect screen
+                              _disposeCurrentCamera(); //close opned camera before moving to next screem
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AddMarkingSheet(),
+                                builder: (context) =>
+                                    AddMarkingSheet(mcqSheetFormatIndex),
                               ));
                             },
                             style: ButtonStyle(
