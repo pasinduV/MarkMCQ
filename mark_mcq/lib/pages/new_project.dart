@@ -23,6 +23,7 @@ class _NewProjectState extends State<NewProject> {
   String processedImageDir = '';
   String projectFolderDIR = '';
   String projectName = '';
+  int mcqSheetFormatIndex = 0; //
   //New Project Function
   Future<void> setPath() async {
     // Get the root directory of the external storage.
@@ -227,6 +228,7 @@ class _NewProjectState extends State<NewProject> {
                   [Color.fromARGB(255, 8, 117, 225)],
                 ],
                 onToggle: (index) {
+                  mcqSheetFormatIndex = index!;
                   print('switched to: $index');
                 },
               ),
@@ -255,8 +257,8 @@ class _NewProjectState extends State<NewProject> {
                         onPressed: () {
                           // Navigate to the CameraSelect screen
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                CameraSelect(originalImageDir),
+                            builder: (context) => CameraSelect(
+                                originalImageDir, mcqSheetFormatIndex),
                           ));
                         },
                         style: ButtonStyle(
