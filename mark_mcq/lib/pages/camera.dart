@@ -539,6 +539,13 @@ class _CameraSelectState extends State<CameraSelect> {
                         Builder(builder: (context) {
                           return ElevatedButton(
                             onPressed: () {
+                              // Call the dispose() function here
+                              _disposeCurrentCamera();
+                              _errorStreamSubscription?.cancel();
+                              _errorStreamSubscription = null;
+                              _cameraClosingStreamSubscription?.cancel();
+                              _cameraClosingStreamSubscription = null;
+
                               // Navigate to the CameraSelect screen
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const AddMarkingSheet(),
