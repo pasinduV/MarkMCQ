@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       height: 1024,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: FileImage(File("Photos/1.jpg")),
+          image: FileImage(File("Photos/3.jpg")),
           fit: BoxFit.fill,
         ),
       ),
