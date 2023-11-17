@@ -87,13 +87,12 @@ class _NewProjectState extends State<NewProject> {
             originalImageDir = originalImagesDir.path;
             processedImageDir = processedImagesDir.path;
             projectFolderDIR = projectDir;
+            saveToLogFile("$projectDir\\$projectName");
           });
         }
       }
     }
   }
-
-//------------------------------
 
 //Browse Function
   List<File> _images = []; // A list of files to store the selected images.
@@ -126,7 +125,18 @@ class _NewProjectState extends State<NewProject> {
     }
   }
 
-//------------------------------
+  void saveToLogFile(String data) async {
+    Directory documentDirectory =
+        await getApplicationDocumentsDirectory(); //get user's document path
+    String docPath = documentDirectory.path; //store path to variable
+    File logFile = File('$docPath/logfile.txt');
+    RandomAccessFile outputFile = logFile.openSync(
+        mode: FileMode
+            .append); // Open the file in write mode and create it if it doesn't exist
+    outputFile.writeStringSync('$data\n'); // Write the string to the file
+    outputFile.closeSync(); // Close the file
+  }
+
   Scaffold body() {
     return Scaffold(
       body: Container(
@@ -229,7 +239,6 @@ class _NewProjectState extends State<NewProject> {
                 ],
                 onToggle: (index) {
                   mcqSheetFormatIndex = index!;
-                  print('switched to: $index');
                 },
               ),
             ),
@@ -275,7 +284,7 @@ class _NewProjectState extends State<NewProject> {
                           minimumSize: MaterialStateProperty.all(const Size(
                               150, 100)), // Set the button height to 30
                           backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromRGBO(255, 255, 255, 1),
+                            const Color.fromRGBO(255, 255, 255, 1),
                           ),
                         ),
                         child: const Icon(Icons.camera_alt,
