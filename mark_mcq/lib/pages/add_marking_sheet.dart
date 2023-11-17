@@ -40,10 +40,9 @@ class AddMarkingSheet extends StatelessWidget {
       default:
         break;
     }
-    List<List<String>> gridValues =
-        List.generate(rows, (_) => List.filled(cols, ""), growable: false);
 
-    int questionNum;
+    List<int> correctAnswerList = List<int>.filled(
+        rows * cols, 0); //  stores the given answers by the teacher
 
     return Scaffold(
       body: Container(
@@ -86,7 +85,7 @@ class AddMarkingSheet extends StatelessWidget {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: Colors.black38,
+                                  color: Color.fromARGB(255, 0, 0, 0),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(4),
@@ -101,8 +100,8 @@ class AddMarkingSheet extends StatelessWidget {
                                 maxLength:
                                     1, // Restrict input to a single digit (1-5)
                                 onChanged: (value) {
-                                  gridValues[i][j] =
-                                      value; // Store the input value in the array
+                                  correctAnswerList[i * cols + j] =
+                                      int.parse(value);
                                 },
                               ),
                             ),
@@ -131,7 +130,7 @@ class AddMarkingSheet extends StatelessWidget {
                               for (int i = 0; i < rows; i++) {
                                 for (int j = 0; j < cols; j++) {
                                   print(
-                                      "${i * cols + j + 1}: ${gridValues[i][j]}");
+                                      "${i * cols + j + 1}: ${correctAnswerList[i * cols + j]}");
                                 }
                               }
                               // Navigate to the AddMarkingShhet screen
