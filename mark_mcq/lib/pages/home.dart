@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'new_project.dart';
 
@@ -19,6 +20,48 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Future<List<String>> readTextFile() async {
+    Directory documentDirectory =
+        await getApplicationDocumentsDirectory(); //get user's document path
+    String docPath = documentDirectory.path; //store path to variable
+    File logFile = File('$docPath/logfile.txt');
+    List<String> folderLocations = [];
+    try {
+      String content = await File('$docPath/logfile.txt').readAsString();
+      folderLocations = content.split('\n');
+    } catch (e) {
+      print('Failed to read the text file: $e');
+    }
+    return folderLocations;
+  }
+
+  //-----------------------
+  List<String> folderLocations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadFolderLocations();
+  }
+
+  Future<void> loadFolderLocations() async {
+    List<String> locations = await readTextFile();
+    setState(() {
+      folderLocations = locations;
+    });
+  }
+
+  void openFolder(String folderPath) {
+    if (Platform.isWindows) {
+      Process.run('explorer.exe', [folderPath]);
+    } else if (Platform.isMacOS) {
+      Process.run('open', [folderPath]);
+    } else if (Platform.isLinux) {
+      Process.run('xdg-open', [folderPath]);
+    }
+  }
+  //-----------------------
 
   Container leftPanel() {
     return Container(
@@ -196,15 +239,25 @@ class _HomePageState extends State<HomePage> {
                     ),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
-                  child: const Center(
-                    child: Text(
-                      'Inner Container 2',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  // child: const Center(
+                  //   child: Text(
+                  //     'Inner Container 2',
+                  //     style: TextStyle(
+                  //       fontSize: 14,
+                  //       color: Colors.black,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  child: ListView.builder(
+                    itemCount: folderLocations.length,
+                    itemBuilder: (context, index) {
+                      String folderPath = folderLocations[index];
+                      return ListTile(
+                        title: Text(folderPath),
+                        onTap: () => openFolder(folderPath),
+                      );
+                    },
                   ),
                 ),
               ],
