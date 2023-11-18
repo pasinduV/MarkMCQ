@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return folderLocations;
   }
 
-  //-----------------------
+  //recent projects-------------------------------
   List<String> folderLocations = [];
 
   @override
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
       Process.run('xdg-open', [folderPath]);
     }
   }
-  //-----------------------
+  //----------------------------------------------
 
   Container leftPanel() {
     return Container(
