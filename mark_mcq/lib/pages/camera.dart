@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'add_marking_sheet.dart';
+import 'package:path/path.dart' as path;
 
 String originalImgDir = '';
 int mcqSheetFormatIndex = 0;
@@ -32,6 +33,7 @@ class _CameraSelectState extends State<CameraSelect> {
   StreamSubscription<CameraErrorEvent>? _errorStreamSubscription;
   StreamSubscription<CameraClosingEvent>? _cameraClosingStreamSubscription;
   String _lastImagePath = 'Photos/1.jpg';
+  String studentIndex = '';
 
   @override
   void initState() {
@@ -226,6 +228,21 @@ class _CameraSelectState extends State<CameraSelect> {
   Future<void> _retakePicture(String replaceFileDir) async {
     deleteFile(replaceFileDir);
     _takePicture();
+  }
+
+  //rename image
+  void renameImage(String oldPath, String newName) async {
+    String directory = path.dirname(oldPath);
+    String newPath = path.join(directory, newName);
+
+    File oldFile = File(oldPath);
+    if (await oldFile.exists()) {
+      File newFile = await oldFile.rename('$newPath.jpg');
+      print('File renamed from $oldPath to $newPath');
+    } else {
+      print('File does not exist at $oldPath');
+    }
+    _lastImagePath = newPath;
   }
 
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
@@ -490,8 +507,11 @@ class _CameraSelectState extends State<CameraSelect> {
                             borderRadius: BorderRadius.circular(
                                 6), // Set border radius if needed
                           ),
-                          child: const TextField(
-                            style: TextStyle(
+                          child: TextField(
+                            onChanged: (value) {
+                              studentIndex = value;
+                            },
+                            style: const TextStyle(
                               fontSize: 14,
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w600,
@@ -499,7 +519,7 @@ class _CameraSelectState extends State<CameraSelect> {
                               color: Color.fromARGB(
                                   255, 0, 0, 0), // Set text color
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(10, -8, 0, 10),
                               border:
@@ -510,7 +530,7 @@ class _CameraSelectState extends State<CameraSelect> {
                         const SizedBox(width: 10),
                         ElevatedButton(
                           onPressed: () {
-                            // Add your button's action here
+                            renameImage(_lastImagePath, studentIndex);
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
