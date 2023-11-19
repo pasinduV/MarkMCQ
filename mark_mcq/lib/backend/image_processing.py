@@ -11,7 +11,10 @@ def process_folder():
     folder_path = data['folder_path']
     paper_type = data['paper_type_index']
     correct_answers = data['answer_list']
-    print(correct_answers);
+    print("you are in python file")
+
+    for i in range(len(correct_answers)):
+        correct_answers[i] -= 1
 
     if not folder_path:
         return jsonify({"error": "Folder path not provided"})
@@ -27,18 +30,18 @@ def process_folder():
 
             # Call the existing image processing function
             if paper_type==0:
-                result = process_image_1col(image_path)
+                result = process_image_1col(image_path,correct_answers)
             elif paper_type==1:
-                result= process_image_4col(image_path)
+                result= process_image_4col(image_path,correct_answers)
             elif paper_type==2:
-                result = process_image_2col(image_path)
+                result = process_image_2col(image_path,correct_answers)
 
             # Append image name and total score to the scores list
             scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
 
     return jsonify(scores)
 
-def process_image_1col(image_path):
+def process_image_1col(image_path,correct_answers):
     if not image_path:
         return jsonify({"error": "Image path not provided"})
 
@@ -145,7 +148,7 @@ def process_image_1col(image_path):
 
     ###
     # ORIGINAL ANSWERS
-    ans = [1, 1, 2, 3, 4, 0, 0, 0, 1, 1, 2, 1, 0, 0, 1, 2, 1, 0, 1, 0, 1, 2, 3, 2, 1]
+    ans = correct_answers
 
     # assigning path to a variables
     img = cv2.imread(image_path)
@@ -269,7 +272,7 @@ def process_image_1col(image_path):
 
     cv2.waitKey(0)
 
-def process_image_4col(image_path):
+def process_image_4col(image_path,correct_answers):
     # data = request.json  # Receive JSON data with the image path
     # pathOfImage = data['image_path']
     
@@ -351,10 +354,16 @@ def process_image_4col(image_path):
 
     ###
     # ORIGINAL ANSWERS
-    ansCol1 = [1, 3, 1, 2, 1, 3, 2, 1, 2, 3]  # answers for column 1
-    ansCol2 = [0, 2, 4, 3, 1, 3, 2, 2, 1, 1]  # answers for column 2
-    ansCol3 = [4, 3, 2, 1, 3, 0, 4, 3, 2, 3]  # answers for column 3
-    ansCol4 = [4, 1, 3, 2, 2, 0, 1, 2, 3, 4]  # answers for column 4
+    ansCol1 = correct_answers[0:10]  # answers for column 1
+    ansCol2 = correct_answers[10:20]  # answers for column 2
+    ansCol3 = correct_answers[20:30]  # answers for column 3
+    ansCol4 = correct_answers[30:40]   # answers for column 4
+    print("seperated columns")
+    print(ansCol1)
+    print(ansCol2)
+    print(ansCol3)
+    print(ansCol4)
+    print("seperated columns")
 
     # assigning path to a variables
     img = cv2.imread(image_path)
@@ -602,7 +611,7 @@ def process_image_4col(image_path):
 
         return result
 
-def process_image_2col(image_path):
+def process_image_2col(image_path,correct_answers):
     ####parameters
     pathOfImage = "2col.jpg"
     widthImage = 300
@@ -670,8 +679,8 @@ def process_image_2col(image_path):
 
     ###
     # ORIGINAL ANSWERS
-    ansCol1 = [0,1,2,3,4,0,0,1,1,2,0,0,1,2,3,4,2,1,0,1,0,1,2,3,4]#answers for column 1
-    ansCol2 = [4,3,2,1,0,1,2,3,4,0,4,3,1,2,0,1,2,3,4,0,0,1,1,3,0]#answers for column 2
+    ansCol1 = correct_answers[0:25]#answers for column 1
+    ansCol2 = correct_answers[25:]#answers for column 2
 
     # assigning path to a variables
     img = cv2.imread(image_path)
