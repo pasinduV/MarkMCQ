@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 import cv2
 import numpy as np
 import os
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl import load_workbook
 
 app = Flask(__name__)
 
@@ -12,6 +15,7 @@ def process_folder():
     paper_type = data['paper_type_index']
     correct_answers = data['answer_list']
     print("you are in python file")
+    
 
     for i in range(len(correct_answers)):
         correct_answers[i] -= 1
@@ -23,6 +27,7 @@ def process_folder():
         return jsonify({"error": "Folder not found"})
 
     scores = []
+    make_new_excel_sheet(folder_path)#create excel sheet
 
     for filename in os.listdir(folder_path):
         if filename.endswith(".jpg") or filename.endswith(".png"):
@@ -30,18 +35,19 @@ def process_folder():
 
             # Call the existing image processing function
             if paper_type==0:
-                result = process_image_1col(image_path,correct_answers)
+                result = process_image_1col(image_path,folder_path,correct_answers,filename)
             elif paper_type==1:
-                result= process_image_4col(image_path,correct_answers)
+                result= process_image_4col(image_path,folder_path,correct_answers,filename)
             elif paper_type==2:
-                result = process_image_2col(image_path,correct_answers)
+                result = process_image_2col(image_path,folder_path,correct_answers,filename)
 
             # Append image name and total score to the scores list
             scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
 
+
     return jsonify(scores)
 
-def process_image_1col(image_path,correct_answers):
+def process_image_1col(image_path,folder_path,correct_answers,file_name):
     if not image_path:
         return jsonify({"error": "Image path not provided"})
 
@@ -259,6 +265,8 @@ def process_image_1col(image_path,correct_answers):
 
         finalScore = (sum(grading) / questions) * 100
 
+        update_excel_sheet(folder_path,file_name,finalScore)#append values to excel sheet
+
         print("Final Marks =", finalScore)
 
         # mark correct and wrong answers in the answer sheet
@@ -272,7 +280,7 @@ def process_image_1col(image_path,correct_answers):
 
     cv2.waitKey(0)
 
-def process_image_4col(image_path,correct_answers):
+def process_image_4col(image_path,folder_path,correct_answers,file_name):
     # data = request.json  # Receive JSON data with the image path
     # pathOfImage = data['image_path']
     
@@ -604,14 +612,16 @@ def process_image_4col(image_path,correct_answers):
         #TotalScore = (score1 + score2 + score3 + score4) / (questionsPerCol * 4) * 100
         TotalScore = (score1+score2+ score3 + score4)
         #/(questionsPerCol*4)*100
+        update_excel_sheet(folder_path,file_name,TotalScore)#append values to excel sheet
 
         result = {
             "TotalScore": TotalScore
         }
 
+
         return result
 
-def process_image_2col(image_path,correct_answers):
+def process_image_2col(image_path,folder_path,correct_answers,file_name):
     ####parameters
     pathOfImage = "2col.jpg"
     widthImage = 300
@@ -827,9 +837,34 @@ def process_image_2col(image_path,correct_answers):
         score2 = sum(marks2)
         TotalScore = (score1+score2)/(questionsPercol*2)*100
 
+        update_excel_sheet(folder_path,file_name,TotalScore)#append values to excel sheet
+
         print("Final Marks = " , TotalScore)
 
     cv2.waitKey(0)    
+
+def update_excel_sheet(folder_path,image,mark):
+    
+    path=folder_path+"/allmarks.xlsx"
+    workbook = load_workbook(path)
+    index = os.path.splitext(image)[0]
+    sheet = workbook.active
+    next_row = sheet.max_row + 1
+
+    sheet[f'A{next_row}'] = str(index)
+    sheet[f'B{next_row}'] = str(mark)
+
+    workbook.save(path)
+
+def make_new_excel_sheet(folder_path):
+    workbook = Workbook()
+    sheet = workbook.active
+
+    sheet['A1'] = 'Index'
+    sheet['B1'] = 'marks'
+
+    workbook.save(os.path.join(folder_path,"allmarks.xlsx"))
+    workbook.close()   
 
 if __name__ == '__main__':
     app.run(debug=True)
