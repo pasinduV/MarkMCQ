@@ -580,8 +580,8 @@ class _CameraSelectState extends State<CameraSelect> {
                               // Navigate to the CameraSelect screen
                               _disposeCurrentCamera(); //close opned camera before moving to next screem
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    AddMarkingSheet(mcqSheetFormatIndex),
+                                builder: (context) => AddMarkingSheet(
+                                    mcqSheetFormatIndex, originalImgDir),
                               ));
                             },
                             style: ButtonStyle(

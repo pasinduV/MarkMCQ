@@ -1,14 +1,57 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'show_marked_sheets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AddMarkingSheet extends StatelessWidget {
   int mcqSheetFormatIndex = 0;
+  String originalImageDir = '';
+  List<int>? correctAnswerListToPass = null;
 
-  AddMarkingSheet(int index, {super.key}) {
+  AddMarkingSheet(int index, String originalImageDirPath, {super.key}) {
     mcqSheetFormatIndex = index;
+    originalImageDir = originalImageDirPath;
     print("index passed to third screen: $mcqSheetFormatIndex"); //test
+    print("image directory in answer page: $originalImageDirPath");
   }
+
+  //backend link --------------------------------------------------------------
+  String apiUrl = "http://127.0.0.1:5000/process_folder";
+  Future<void> sendFolderForProcessing() async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json.encode({
+          "folder_path": originalImageDir,
+          "paper_type_index": mcqSheetFormatIndex,
+          "answer_list": correctAnswerListToPass,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        List<Map<String, dynamic>> data =
+            List<Map<String, dynamic>>.from(json.decode(response.body));
+
+        for (var entry in data) {
+          String imageName = entry['imageName'];
+          int totalScore = entry['totalScore'];
+
+          print('Image Name: $imageName, Total Score: $totalScore');
+        }
+      } else {
+        // Handle errors here
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Exception: $e');
+    }
+  }
+  //---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +145,7 @@ class AddMarkingSheet extends StatelessWidget {
                                 onChanged: (value) {
                                   correctAnswerList[i * cols + j] =
                                       int.parse(value);
+                                  correctAnswerListToPass = correctAnswerList;
                                 },
                               ),
                             ),
@@ -187,10 +231,11 @@ class AddMarkingSheet extends StatelessWidget {
                         child: Builder(builder: (context) {
                           return ElevatedButton(
                             onPressed: () {
+                              sendFolderForProcessing(); //API calling
                               // Use a Builder to access the context
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const ShowMarkedSheets(),
-                              ));
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //   builder: (context) => const ShowMarkedSheets(),
+                              // ));
                             },
                             style: ButtonStyle(
                               overlayColor: MaterialStateColor.resolveWith(
