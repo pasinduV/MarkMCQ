@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'home.dart';
+import 'package:path/path.dart' as path;
 
 class NewProject extends StatefulWidget {
   const NewProject({super.key});
@@ -20,11 +21,11 @@ class _NewProjectState extends State<NewProject> {
     return body();
   }
 
-  String originalImageDir = '';
+  String originalImageDir = ''; //captured or browsed images are stored here
   String processedImageDir = '';
-  String projectFolderDIR = '';
-  String projectName = '';
-  int mcqSheetFormatIndex = 0; //
+  String projectFolderDir = '';
+  String projectNameToPass = '';
+  int mcqSheetFormatIndex = 0; //index for answer sheet format
 
   //New Project Function
   Future<void> setPath() async {
@@ -39,7 +40,7 @@ class _NewProjectState extends State<NewProject> {
         String? projectName = await showDialog(
           context: context,
           builder: (BuildContext context) {
-            TextEditingController _controller =
+            TextEditingController controller =
                 TextEditingController(); // Add a controller to retrieve the entered project name.
             return AlertDialog(
               title: const Text(
@@ -57,13 +58,13 @@ class _NewProjectState extends State<NewProject> {
                     border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 )),
-                controller: _controller,
+                controller: controller,
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(
                       context,
-                      _controller
+                      controller
                           .text), // Pass the entered project name to the Navigator.pop() method.
                   child: const Text('OK'),
                 ),
@@ -79,6 +80,7 @@ class _NewProjectState extends State<NewProject> {
           // Check if the project name is not empty.
           Directory newProjectDir = Directory('$projectDir/$projectName');
           newProjectDir.createSync();
+          projectNameToPass = projectName;
           Directory originalImagesDir =
               Directory('${newProjectDir.path}/original images');
           originalImagesDir.createSync();
@@ -86,10 +88,12 @@ class _NewProjectState extends State<NewProject> {
               Directory('${newProjectDir.path}/processed images');
           processedImagesDir.createSync();
           setState(() {
-            originalImageDir = originalImagesDir.path;
-            processedImageDir = processedImagesDir.path;
-            projectFolderDIR = projectDir;
-            saveToLogFile("$projectDir\\$projectName");
+            originalImageDir =
+                "$projectDir\\$projectName\\original images"; //originalImagesDir.path;
+            processedImageDir =
+                "$projectDir\\$projectName\\processed images"; //processedImagesDir.path;
+            projectFolderDir = "$projectDir\\$projectName";
+            saveToLogFile(projectFolderDir);
           });
         }
       }
@@ -117,8 +121,7 @@ class _NewProjectState extends State<NewProject> {
 
       for (int i = 0; i < _images.length; i++) {
         // Looping through all the selected images and saving them to the directory.
-        final String fileName =
-            '${DateTime.now().millisecondsSinceEpoch}.png'; // Generating a unique file name for each image.
+        final String fileName = Uri.file(_images[i].path).pathSegments.last;
         final File localImage = await _images[i].copy(
             '$path/$fileName'); // Copying the image to the directory with the generated file name.
         print(
@@ -131,7 +134,7 @@ class _NewProjectState extends State<NewProject> {
     Directory documentDirectory =
         await getApplicationDocumentsDirectory(); //get user's document path
     String docPath = documentDirectory.path; //store path to variable
-    File logFile = File('$docPath/logfile.txt');
+    File logFile = File('$docPath/markMCQlogfile.txt');
     RandomAccessFile outputFile = logFile.openSync(
         mode: FileMode
             .append); // Open the file in write mode and create it if it doesn't exist
@@ -221,7 +224,7 @@ class _NewProjectState extends State<NewProject> {
                     child: Container(
                         padding: const EdgeInsets.all(4),
                         child: Text(
-                          projectFolderDIR,
+                          projectFolderDir,
                           style: const TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -332,7 +335,11 @@ class _NewProjectState extends State<NewProject> {
                           // Navigate to the CameraSelect screen
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => CameraSelect(
-                                originalImageDir, mcqSheetFormatIndex),
+                                projectNameToPass,
+                                projectFolderDir,
+                                originalImageDir,
+                                processedImageDir,
+                                mcqSheetFormatIndex),
                           ));
                         },
                         style: ButtonStyle(

@@ -21,14 +21,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<String>> readTextFile() async {
+  Future<List<String>> readLogFile() async {
     Directory documentDirectory =
-        await getApplicationDocumentsDirectory(); //get user's document path
+        await getApplicationDocumentsDirectory(); //get windows user document path
     String docPath = documentDirectory.path; //store path to variable
-    File logFile = File('$docPath/logfile.txt');
+    File logFile = File('$docPath/markMCQlogfile.txt');
     List<String> folderLocations = [];
     try {
-      String content = await File('$docPath/logfile.txt').readAsString();
+      String content = await File('$docPath/markMCQlogfile.txt').readAsString();
       folderLocations = content.split('\n');
     } catch (e) {
       print('Failed to read the text file: $e');
@@ -37,7 +37,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   //recent projects-------------------------------
-  List<String> folderLocations = [];
+  List<String> folderLocations =
+      []; //stores the paths of recent projects from markMCQLogFile
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> loadFolderLocations() async {
-    List<String> locations = await readTextFile();
+    List<String> locations = await readLogFile();
     setState(() {
       folderLocations = locations;
     });

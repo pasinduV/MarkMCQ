@@ -46,6 +46,7 @@ dependencies:
   camera_platform_interface: ^2.6.0
   toggle_switch: ^2.1.0
   http: ^1.1.0
+  open_file: ^3.3.2
 
 
 dev_dependencies:

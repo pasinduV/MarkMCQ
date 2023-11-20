@@ -11,14 +11,21 @@ app = Flask(__name__)
 @app.route('/process_folder', methods=['POST'])
 def process_folder():
     data = request.json  # Receive JSON data with the folder path
-    folder_path = data['folder_path']
+    project_folder_path = data['project_folder_path']
     paper_type = data['paper_type_index']
     correct_answers = data['answer_list']
+    project_name = data['project_name']
+    processed_image_folder = data['processed_image_folder']
+    folder_path = data['original_image_path']
+
     print("you are in python file")
-    
+    print(correct_answers)
+    print(project_name)
 
     for i in range(len(correct_answers)):
         correct_answers[i] -= 1
+    
+    print(correct_answers)
 
     if not folder_path:
         return jsonify({"error": "Folder path not provided"})
@@ -26,8 +33,8 @@ def process_folder():
     if not os.path.exists(folder_path):
         return jsonify({"error": "Folder not found"})
 
-    scores = []
-    make_new_excel_sheet(folder_path)#create excel sheet
+    #scores = []
+    make_new_excel_sheet( project_folder_path,project_name)#create excel sheet
 
     for filename in os.listdir(folder_path):
         if filename.endswith(".jpg") or filename.endswith(".png"):
@@ -35,19 +42,18 @@ def process_folder():
 
             # Call the existing image processing function
             if paper_type==0:
-                result = process_image_1col(image_path,folder_path,correct_answers,filename)
+                result = process_image_1col(image_path,project_folder_path,correct_answers,filename,project_name)
             elif paper_type==1:
-                result= process_image_4col(image_path,folder_path,correct_answers,filename)
+                result= process_image_4col(image_path,project_folder_path,correct_answers,filename,project_name)
             elif paper_type==2:
-                result = process_image_2col(image_path,folder_path,correct_answers,filename)
+                result = process_image_2col(image_path,project_folder_path,correct_answers,filename,project_name)
 
-            # Append image name and total score to the scores list
-            scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
+    #         # Append image name and total score to the scores list
+    #         scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
 
+    return jsonify()
 
-    return jsonify(scores)
-
-def process_image_1col(image_path,folder_path,correct_answers,file_name):
+def process_image_1col(image_path,folder_path,correct_answers,file_name,project_name):
     if not image_path:
         return jsonify({"error": "Image path not provided"})
 
@@ -55,7 +61,6 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name):
         return jsonify({"error": "Image file not found"})
     
     ####parameters
-    path = "1Col.jpg"
     widthImg = 230
     heightImg = 800
     questions = 25
@@ -263,11 +268,9 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name):
                 grading.append(0)
                 grade += 0
 
-        finalScore = (sum(grading) / questions) * 100
+        totalScore = sum(grading)
 
-        update_excel_sheet(folder_path,file_name,finalScore)#append values to excel sheet
-
-        print("Final Marks =", finalScore)
+        update_excel_sheet(folder_path,file_name,totalScore,project_name)#append values to excel sheet
 
         # mark correct and wrong answers in the answer sheet
         imgResult = imgWarpColoured.copy()
@@ -275,15 +278,16 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name):
             imgResult, myIndex, grading, ans, questions, choices
         )
 
-        cv2.imshow("Markings ", imgResult)
+        new_image_path = os.path.join(folder_path, "processed images", os.path.basename(image_path))
+        cv2.imwrite(new_image_path, imgResult)
+
+        #cv2.imshow("Markings ", imgResult)
 
 
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
-def process_image_4col(image_path,folder_path,correct_answers,file_name):
-    # data = request.json  # Receive JSON data with the image path
-    # pathOfImage = data['image_path']
-    
+def process_image_4col(image_path,folder_path,correct_answers,file_name,project_name):
+
     if not image_path:
         return jsonify({"error": "Image path not provided"})
 
@@ -298,7 +302,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name):
     ####
 
     # functions
-
     rowNumber = 10
     colNumber = 5
 
@@ -356,8 +359,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name):
                 bubbleArray.append(bubble)
 
         return bubbleArray
-
-
     ##end of function
 
     ###
@@ -478,10 +479,10 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name):
         image3WarpGrey = cv2.cvtColor(image3Warp, cv2.COLOR_BGR2GRAY)
         image4WarpGrey = cv2.cvtColor(image4Warp, cv2.COLOR_BGR2GRAY)
 
-        image1Thresh = cv2.threshold(image1WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image2Thresh = cv2.threshold(image2WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image3Thresh = cv2.threshold(image3WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image4Thresh = cv2.threshold(image4WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
+        image1Thresh = cv2.threshold(image1WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image2Thresh = cv2.threshold(image2WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image3Thresh = cv2.threshold(image3WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image4Thresh = cv2.threshold(image4WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
 
         # take each individual bubbles and find pixel values of each bubble to find marked bubbles
 
@@ -573,6 +574,12 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name):
             Index3.append(myIndexVal3[0][0])
             Index4.append(myIndexVal4[0][0])
 
+        print("marked answers")
+        print(Index1)
+        print(Index2)
+        print(Index3)
+        print(Index4)
+
         # grading
         grading1 = []
         grading2 = []
@@ -612,18 +619,16 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name):
         #TotalScore = (score1 + score2 + score3 + score4) / (questionsPerCol * 4) * 100
         TotalScore = (score1+score2+ score3 + score4)
         #/(questionsPerCol*4)*100
-        update_excel_sheet(folder_path,file_name,TotalScore)#append values to excel sheet
+        update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
 
-        result = {
-            "TotalScore": TotalScore
-        }
+        # result = {
+        #     "TotalScore": TotalScore
+        # }
 
+        # return result
 
-        return result
-
-def process_image_2col(image_path,folder_path,correct_answers,file_name):
+def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
     ####parameters
-    pathOfImage = "2col.jpg"
     widthImage = 300
     heightImg = 700
     questionsPercol = 25
@@ -835,17 +840,15 @@ def process_image_2col(image_path,folder_path,correct_answers,file_name):
         #final score
         score1 = sum(marks1)
         score2 = sum(marks2)
-        TotalScore = (score1+score2)/(questionsPercol*2)*100
+        TotalScore = score1+score2
 
-        update_excel_sheet(folder_path,file_name,TotalScore)#append values to excel sheet
-
-        print("Final Marks = " , TotalScore)
+        update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
 
     cv2.waitKey(0)    
 
-def update_excel_sheet(folder_path,image,mark):
+def update_excel_sheet(folder_path,image,mark,project_name):
     
-    path=folder_path+"/allmarks.xlsx"
+    path=folder_path+"\\"+project_name+".xlsx"
     workbook = load_workbook(path)
     index = os.path.splitext(image)[0]
     sheet = workbook.active
@@ -856,14 +859,15 @@ def update_excel_sheet(folder_path,image,mark):
 
     workbook.save(path)
 
-def make_new_excel_sheet(folder_path):
+def make_new_excel_sheet(folder_path,project_name):
     workbook = Workbook()
     sheet = workbook.active
+    path=folder_path+"\\"+project_name+".xlsx"
 
     sheet['A1'] = 'Index'
     sheet['B1'] = 'marks'
 
-    workbook.save(os.path.join(folder_path,"allmarks.xlsx"))
+    workbook.save(path)
     workbook.close()   
 
 if __name__ == '__main__':
