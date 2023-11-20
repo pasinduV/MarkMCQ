@@ -112,6 +112,19 @@ class AddMarkingSheet extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Container(
+                    height: 30,
+                    child: const Text(
+                      'Add Answers',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 20,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.02,
+                      ),
+                    ),
+                  ),
                   // MCQ answer input section
                   for (int i = 0; i < rows; i++)
                     Row(
@@ -183,31 +196,57 @@ class AddMarkingSheet extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Completed'),
+                                      title: const Text('Completed'),
+                                      icon: const Icon(Icons.done_all),
                                       //content: Text('This is a popup window'),
                                       actions: [
-                                        TextButton(
-                                          child: Text('Home'),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomePage(),
-                                            ));
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('Open Excel Sheet'),
-                                          onPressed: () async {
-                                            String filePath =
-                                                '$projectFolderDir\\$projectName.xlsx';
-                                            await OpenFile.open(filePath);
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomePage(),
-                                            ));
-                                          },
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              child: const Text(
+                                                'Home',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.02,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const HomePage(),
+                                                ));
+                                              },
+                                            ),
+                                            const SizedBox(
+                                                width:
+                                                    30), // Adjust the space between buttons
+                                            TextButton(
+                                              child: const Text(
+                                                'Open Excel Sheet',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.02,
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                String filePath =
+                                                    '$projectFolderDir\\$projectName.xlsx';
+                                                await OpenFile.open(filePath);
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const HomePage(),
+                                                ));
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     );
@@ -225,7 +264,7 @@ class AddMarkingSheet extends StatelessWidget {
                                   .center, // You can adjust alignment as needed
                               children: [
                                 Icon(
-                                  Icons.add_a_photo_outlined,
+                                  Icons.settings_outlined,
                                   color: Colors
                                       .white, // You can customize the icon color
                                   size: 20,
