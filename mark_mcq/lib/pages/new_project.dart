@@ -420,8 +420,12 @@ class _NewProjectState extends State<NewProject> {
                   return ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            CameraSelect(originalImageDir, mcqSheetFormatIndex),
+                        builder: (context) => CameraSelect(
+                            projectNameToPass,
+                            projectFolderDir,
+                            originalImageDir,
+                            processedImageDir,
+                            mcqSheetFormatIndex),
                       ));
                     },
                     style: ButtonStyle(

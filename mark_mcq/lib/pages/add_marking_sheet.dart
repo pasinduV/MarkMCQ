@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,9 +22,6 @@ class AddMarkingSheet extends StatelessWidget {
     projectFolderDir = rProjectFolderDir;
     originalImageDir = rOriginalImageDir;
     processedImageDir = rProcessedImageDir;
-    print("index passed to third screen: $mcqSheetFormatIndex"); //test
-    print("image directory in answer page: $originalImageDir");
-    print("project name in answer page: $projectName");
   }
 
   //backend link --------------------------------------------------------------
@@ -48,13 +46,6 @@ class AddMarkingSheet extends StatelessWidget {
       if (response.statusCode == 200) {
         List<Map<String, dynamic>> data =
             List<Map<String, dynamic>>.from(json.decode(response.body));
-
-        // for (var entry in data) {
-        //   String imageName = entry['imageName'];
-        //   int totalScore = entry['totalScore'];
-
-        //   print('Image Name: $imageName, Total Score: $totalScore');
-        // }
       } else {
         // Handle errors here
         print('Error: ${response.statusCode}');
@@ -64,7 +55,6 @@ class AddMarkingSheet extends StatelessWidget {
       print('Exception: $e');
     }
   }
-  //---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +64,8 @@ class AddMarkingSheet extends StatelessWidget {
   Scaffold body() {
     int cols = 0;
     int rows = 0;
+
+    //set rows and columns for entering correct answers according to answer sheet type
     switch (mcqSheetFormatIndex) {
       case 0:
         {
@@ -106,10 +98,9 @@ class AddMarkingSheet extends StatelessWidget {
         height: 1024,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(
-                "Photos/newprojectBack.jpg")), // Replace with your image asset
+            image: FileImage(File("Photos/newprojectBack.jpg")),
             opacity: 220,
-            fit: BoxFit.fill, // Adjust the fit as needed
+            fit: BoxFit.fill,
           ),
         ),
         child: Row(
@@ -154,7 +145,12 @@ class AddMarkingSheet extends StatelessWidget {
                                   counterText: '',
                                 ),
                                 maxLength:
-                                    1, // Restrict input to a single digit (1-5)
+                                    1, // Restrict input to a single digit
+                                inputFormatters: [
+                                  //allow only 1 to 5 values on text field
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp('[1-5]'))
+                                ],
                                 onChanged: (value) {
                                   correctAnswerList[i * cols + j] =
                                       int.parse(value);
@@ -175,67 +171,6 @@ class AddMarkingSheet extends StatelessWidget {
                           border: Border.all(
                             color: const Color.fromARGB(
                                 255, 8, 117, 225), // Border color
-                            width: 2.0, // Border width
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(4), // Border radius
-                        ),
-                        child: Builder(builder: (context) {
-                          return ElevatedButton(
-                            onPressed: () {
-                              //print for test
-                              for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < cols; j++) {
-                                  print(
-                                      "${i * cols + j + 1}: ${correctAnswerList[i * cols + j]}");
-                                }
-                              }
-                              // Navigate to the AddMarkingShhet screen
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromARGB(255, 8, 117, 225),
-                              ),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // You can adjust alignment as needed
-                              children: [
-                                Icon(
-                                  Icons.add_a_photo_outlined,
-                                  color: Colors
-                                      .white, // You can customize the icon color
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width:
-                                      10, // Adjust the spacing between the icon and text
-                                ),
-                                Text(
-                                  'Capture',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.02,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black38, // Border color
                             width: 2.0, // Border width
                           ),
                           borderRadius:
@@ -277,23 +212,11 @@ class AddMarkingSheet extends StatelessWidget {
                                       ],
                                     );
                                   });
-                              sendFolderForProcessing(); //API calling
+                              sendFolderForProcessing();
                             },
                             style: ButtonStyle(
-                              overlayColor: MaterialStateColor.resolveWith(
-                                (states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.blue
-                                        .shade200; // Change the color when the button is pressed
-                                  }
-                                  return Colors.blue
-                                      .shade100; // Use the default color otherwise
-                                },
-                              ),
-                              minimumSize: MaterialStateProperty.all(const Size(
-                                  50, 50)), // Set the button height to 30
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromRGBO(255, 255, 255, 1),
+                                const Color.fromARGB(255, 8, 117, 225),
                               ),
                             ),
                             child: const Row(
@@ -302,9 +225,9 @@ class AddMarkingSheet extends StatelessWidget {
                                   .center, // You can adjust alignment as needed
                               children: [
                                 Icon(
-                                  Icons.wifi_protected_setup_sharp,
-                                  color: Color.fromARGB(255, 0, 0,
-                                      0), // You can customize the icon color
+                                  Icons.add_a_photo_outlined,
+                                  color: Colors
+                                      .white, // You can customize the icon color
                                   size: 20,
                                 ),
                                 SizedBox(
@@ -312,9 +235,9 @@ class AddMarkingSheet extends StatelessWidget {
                                       10, // Adjust the spacing between the icon and text
                                 ),
                                 Text(
-                                  'Process',
+                                  'Proceed',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Colors.white,
                                     fontSize: 14,
                                     fontFamily: 'Roboto',
                                     fontWeight: FontWeight.w600,
