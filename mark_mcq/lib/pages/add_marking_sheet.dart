@@ -48,12 +48,12 @@ class AddMarkingSheet extends StatelessWidget {
         List<Map<String, dynamic>> data =
             List<Map<String, dynamic>>.from(json.decode(response.body));
 
-        for (var entry in data) {
-          String imageName = entry['imageName'];
-          int totalScore = entry['totalScore'];
+        // for (var entry in data) {
+        //   String imageName = entry['imageName'];
+        //   int totalScore = entry['totalScore'];
 
-          print('Image Name: $imageName, Total Score: $totalScore');
-        }
+        //   print('Image Name: $imageName, Total Score: $totalScore');
+        // }
       } else {
         // Handle errors here
         print('Error: ${response.statusCode}');

@@ -33,7 +33,7 @@ def process_folder():
     if not os.path.exists(folder_path):
         return jsonify({"error": "Folder not found"})
 
-    scores = []
+    #scores = []
     make_new_excel_sheet( project_folder_path,project_name)#create excel sheet
 
     for filename in os.listdir(folder_path):
@@ -48,11 +48,10 @@ def process_folder():
             elif paper_type==2:
                 result = process_image_2col(image_path,project_folder_path,correct_answers,filename,project_name)
 
-            # Append image name and total score to the scores list
-            scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
+    #         # Append image name and total score to the scores list
+    #         scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
 
-
-    return jsonify(scores)
+    return jsonify()
 
 def process_image_1col(image_path,folder_path,correct_answers,file_name,project_name):
     if not image_path:
@@ -62,7 +61,6 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
         return jsonify({"error": "Image file not found"})
     
     ####parameters
-    path = "1Col.jpg"
     widthImg = 230
     heightImg = 800
     questions = 25
@@ -270,11 +268,9 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
                 grading.append(0)
                 grade += 0
 
-        finalScore = (sum(grading) / questions) * 100
+        totalScore = sum(grading)
 
-        update_excel_sheet(folder_path,file_name,finalScore,project_name)#append values to excel sheet
-
-        print("Final Marks =", finalScore)
+        update_excel_sheet(folder_path,file_name,totalScore,project_name)#append values to excel sheet
 
         # mark correct and wrong answers in the answer sheet
         imgResult = imgWarpColoured.copy()
@@ -282,15 +278,16 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
             imgResult, myIndex, grading, ans, questions, choices
         )
 
-        cv2.imshow("Markings ", imgResult)
+        new_image_path = os.path.join(folder_path, "processed images", os.path.basename(image_path))
+        cv2.imwrite(new_image_path, imgResult)
+
+        #cv2.imshow("Markings ", imgResult)
 
 
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
 
 def process_image_4col(image_path,folder_path,correct_answers,file_name,project_name):
-    # data = request.json  # Receive JSON data with the image path
-    # pathOfImage = data['image_path']
-    
+
     if not image_path:
         return jsonify({"error": "Image path not provided"})
 
@@ -305,7 +302,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
     ####
 
     # functions
-
     rowNumber = 10
     colNumber = 5
 
@@ -363,8 +359,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
                 bubbleArray.append(bubble)
 
         return bubbleArray
-
-
     ##end of function
 
     ###
@@ -621,12 +615,11 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
         #/(questionsPerCol*4)*100
         update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
 
-        result = {
-            "TotalScore": TotalScore
-        }
+        # result = {
+        #     "TotalScore": TotalScore
+        # }
 
-
-        return result
+        # return result
 
 def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
     ####parameters

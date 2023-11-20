@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:path/path.dart' as path;
 
 class NewProject extends StatefulWidget {
   const NewProject({super.key});
@@ -119,8 +120,7 @@ class _NewProjectState extends State<NewProject> {
 
       for (int i = 0; i < _images.length; i++) {
         // Looping through all the selected images and saving them to the directory.
-        final String fileName =
-            '${DateTime.now().millisecondsSinceEpoch}.png'; // Generating a unique file name for each image.
+        final String fileName = Uri.file(_images[i].path).pathSegments.last;
         final File localImage = await _images[i].copy(
             '$path/$fileName'); // Copying the image to the directory with the generated file name.
         print(
