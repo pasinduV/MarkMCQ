@@ -7,14 +7,22 @@ import 'package:path_provider/path_provider.dart';
 import 'add_marking_sheet.dart';
 import 'package:path/path.dart' as path;
 
-String originalImgDir = '';
 int mcqSheetFormatIndex = 0;
+String originalImageDir = '';
+String processedImageDir = '';
+String projectFolderDir = '';
+String projectName = '';
 
 class CameraSelect extends StatefulWidget {
   /// Default Constructor
 
-  CameraSelect(String txt, int index, {super.key}) {
-    originalImgDir = txt;
+  CameraSelect(String rProjectName, String rProjectFolderDir,
+      String rOriginalImageDir, String rProcessedImageDir, int index,
+      {super.key}) {
+    originalImageDir = rOriginalImageDir; //txt;
+    processedImageDir = rProcessedImageDir;
+    projectFolderDir = rProjectFolderDir;
+    projectName = rProjectName;
     mcqSheetFormatIndex = index;
     print("index passed to second screen: $mcqSheetFormatIndex"); //test
   }
@@ -171,7 +179,7 @@ class _CameraSelectState extends State<CameraSelect> {
     final DateTime now = DateTime.now();
     final String timestamp = now.millisecondsSinceEpoch.toString();
     final fileName = 'image_$timestamp.jpg';
-    final imageDir = '$originalImgDir/$fileName';
+    final imageDir = '$originalImageDir/$fileName';
     await imageFile.saveTo(imageDir);
     // Use the imageFile for further processing or display
     setState(() {
@@ -581,7 +589,11 @@ class _CameraSelectState extends State<CameraSelect> {
                               _disposeCurrentCamera(); //close opned camera before moving to next screem
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => AddMarkingSheet(
-                                    mcqSheetFormatIndex, originalImgDir),
+                                    projectName,
+                                    projectFolderDir,
+                                    originalImageDir,
+                                    processedImageDir,
+                                    mcqSheetFormatIndex),
                               ));
                             },
                             style: ButtonStyle(
