@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'home.dart';
 import 'package:path/path.dart' as path;
 
 class NewProject extends StatefulWidget {
@@ -157,6 +158,44 @@ class _NewProjectState extends State<NewProject> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Builder(builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ));
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 8, 117, 225),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceAround, // You can adjust alignment as needed
+                      children: [
+                        Icon(
+                          Icons.arrow_back_rounded,
+                          color: Color.fromARGB(255, 255, 255,
+                              255), // You can customize the icon color
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                const SizedBox(
+                  width: 440,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 25,
+            ),
             const SizedBox(
               width: 500,
               height: 30,
@@ -211,8 +250,30 @@ class _NewProjectState extends State<NewProject> {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 50,
+              width: 510,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 40, // Set the desired width
+                  child: TextButton(
+                    onPressed: () {
+                      _showInstructionsDialog(context);
+                      // Add your onPressed logic here
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      padding: EdgeInsets.all(4),
+                    ),
+                    child: const Icon(
+                      Icons.info_outline_rounded,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      size: 25,
+                    ),
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               width: 500,
@@ -227,12 +288,15 @@ class _NewProjectState extends State<NewProject> {
                 inactiveBgColor: const Color.fromARGB(255, 255, 255, 255),
                 inactiveFgColor: const Color.fromARGB(255, 0, 0, 0),
                 totalSwitches: 3,
-                icons: const [
-                  Icons.view_column_rounded,
-                  Icons.view_column_rounded,
-                  Icons.view_column_rounded,
+                labels: const ['25 x 1', '10 x 4', '25 x 2'],
+                customTextStyles: const [
+                  TextStyle(
+                    fontSize: 40,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.02,
+                  )
                 ],
-                iconSize: 50.0,
                 borderWidth: 2.0,
                 borderColor: const [Color.fromARGB(255, 66, 165, 245)],
                 dividerColor: const Color.fromARGB(255, 66, 165, 245),
@@ -343,8 +407,154 @@ class _NewProjectState extends State<NewProject> {
                 ],
               ),
             ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(
+                  width: 380,
+                ),
+                Builder(builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            CameraSelect(originalImageDir, mcqSheetFormatIndex),
+                      ));
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 8, 117, 225),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment
+                          .center, // You can adjust alignment as needed
+                      children: [
+                        Icon(
+                          Icons.wifi_protected_setup_outlined,
+                          color:
+                              Colors.white, // You can customize the icon color
+                          size: 20,
+                        ),
+                        SizedBox(
+                          width:
+                              10, // Adjust the spacing between the icon and text
+                        ),
+                        Text(
+                          'Proceed',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.02,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showInstructionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Instructions',
+          ),
+          content: Row(
+            children: [
+              _buildColumn(
+                heading: '25 x 1',
+                imagePath: 'Photos/Icons/column1.png',
+                description: 'Description for Column 1...',
+              ),
+              SizedBox(width: 10), // Set the space between columns
+              _buildColumn(
+                heading: '10 x 4',
+                imagePath: 'Photos/Icons/column2.png',
+                description: 'Description for Column 2...',
+              ),
+              SizedBox(width: 10), // Set the space between columns
+              _buildColumn(
+                heading: '25 x 2',
+                imagePath: 'Photos/Icons/column3.png',
+                description: 'Description for Column 3...',
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildColumn({
+    required String heading,
+    required String imagePath,
+    required String description,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black, // Set the border color
+          width: 2.0, // Set the border width
+        ),
+        borderRadius: BorderRadius.circular(8.0), // Set the border radius
+        color: Colors.blue.shade50, // Set the background color
+      ),
+      padding: EdgeInsets.all(10.0), // Adjust the padding as needed
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            heading,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 20,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.02,
+            ),
+          ),
+          SizedBox(height: 8),
+          Image.asset(
+            imagePath,
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 20),
+          Text(
+            description,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 18,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.02,
+            ),
+          ),
+        ],
       ),
     );
   }

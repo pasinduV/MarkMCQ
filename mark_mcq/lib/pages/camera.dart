@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'add_marking_sheet.dart';
 import 'package:path/path.dart' as path;
+import 'new_project.dart';
 
 int mcqSheetFormatIndex = 0;
 String originalImageDir = '';
@@ -286,46 +287,87 @@ class _CameraSelectState extends State<CameraSelect> {
                   child: Column(
                     children: <Widget>[
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          if (_cameras.length > 1) ...<Widget>[
-                            ElevatedButton(
-                              onPressed: _switchCamera,
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                  const Color.fromARGB(255, 8, 117, 225),
-                                ),
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment
-                                    .center, // You can adjust alignment as needed
-                                children: [
-                                  Icon(
-                                    Icons.switch_camera_outlined,
-                                    color: Colors
-                                        .white, // You can customize the icon color
-                                    size: 20,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        10, // Adjust the spacing between the icon and text
-                                  ),
-                                  Text(
-                                    'Switch Camera',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.02,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Builder(builder: (context) {
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => const NewProject(),
+                                    ));
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      const Color.fromARGB(255, 8, 117, 225),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ],
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceAround, // You can adjust alignment as needed
+                                    children: [
+                                      Icon(
+                                        Icons.arrow_back_rounded,
+                                        color: Color.fromARGB(255, 255, 255,
+                                            255), // You can customize the icon color
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 388,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              if (_cameras.length > 1) ...<Widget>[
+                                ElevatedButton(
+                                  onPressed: _switchCamera,
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                      const Color.fromARGB(255, 8, 117, 225),
+                                    ),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center, // You can adjust alignment as needed
+                                    children: [
+                                      Icon(
+                                        Icons.switch_camera_outlined,
+                                        color: Colors
+                                            .white, // You can customize the icon color
+                                        size: 20,
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            10, // Adjust the spacing between the icon and text
+                                      ),
+                                      Text(
+                                        'Switch Camera',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontFamily: 'Roboto',
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.02,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ],
                       ),
                       const SizedBox(
