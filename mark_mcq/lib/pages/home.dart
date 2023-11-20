@@ -69,8 +69,13 @@ class _HomePageState extends State<HomePage> {
       height: 1024,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: FileImage(File("Photos/3.jpg")),
+          image: FileImage(File("Photos/1.jpg")),
           fit: BoxFit.fill,
+          colorFilter: ColorFilter.mode(
+            Colors.black
+                .withOpacity(0.5), // Adjust the opacity and color as needed
+            BlendMode.darken,
+          ),
         ),
       ),
       child: Stack(
@@ -228,37 +233,67 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
-                  width: 580,
-                  height: 380,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color.fromARGB(
-                          255, 160, 157, 157), // Border color
-                      width: 1.0, // Border width
+                Column(
+                  children: [
+                    const SizedBox(
+                      width: 580,
+                      height: 20, // Adjust the height as needed
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          ' Recent Projects',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.02,
+                          ),
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  // child: const Center(
-                  //   child: Text(
-                  //     'Inner Container 2',
-                  //     style: TextStyle(
-                  //       fontSize: 14,
-                  //       color: Colors.black,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                  child: ListView.builder(
-                    itemCount: folderLocations.length,
-                    itemBuilder: (context, index) {
-                      String folderPath = folderLocations[index];
-                      return ListTile(
-                        title: Text(folderPath),
-                        onTap: () => openFolder(folderPath),
-                      );
-                    },
-                  ),
+                    Container(
+                      width: 580,
+                      height: 350,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color.fromARGB(
+                              255, 160, 157, 157), // Border color
+                          width: 1.0, // Border width
+                        ),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: ListView.builder(
+                        itemCount: folderLocations.length,
+                        itemBuilder: (context, index) {
+                          // Reverse the order of folderLocations
+                          String folderPath = folderLocations[
+                              folderLocations.length - 1 - index];
+
+                          // Skip empty lines
+                          if (folderPath.trim().isEmpty) {
+                            return SizedBox.shrink(); // Discard the empty line
+                          }
+
+                          return ListTile(
+                            title: Text(
+                              folderPath,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.02,
+                              ),
+                            ),
+                            tileColor: Colors
+                                .white, // Set the default background color
+                            hoverColor: Colors.blue.shade100
+                                .withOpacity(0.5), // Set the hover color
+                            onTap: () => openFolder(folderPath),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
