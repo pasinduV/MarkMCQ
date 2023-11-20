@@ -623,7 +623,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
 
 def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
     ####parameters
-    pathOfImage = "2col.jpg"
     widthImage = 300
     heightImg = 700
     questionsPercol = 25
@@ -835,11 +834,9 @@ def process_image_2col(image_path,folder_path,correct_answers,file_name,project_
         #final score
         score1 = sum(marks1)
         score2 = sum(marks2)
-        TotalScore = (score1+score2)/(questionsPercol*2)*100
+        TotalScore = score1+score2
 
         update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
-
-        print("Final Marks = " , TotalScore)
 
     cv2.waitKey(0)    
 
