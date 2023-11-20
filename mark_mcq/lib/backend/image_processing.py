@@ -479,10 +479,10 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
         image3WarpGrey = cv2.cvtColor(image3Warp, cv2.COLOR_BGR2GRAY)
         image4WarpGrey = cv2.cvtColor(image4Warp, cv2.COLOR_BGR2GRAY)
 
-        image1Thresh = cv2.threshold(image1WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image2Thresh = cv2.threshold(image2WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image3Thresh = cv2.threshold(image3WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
-        image4Thresh = cv2.threshold(image4WarpGrey, 180, 300, cv2.THRESH_BINARY_INV)[1]
+        image1Thresh = cv2.threshold(image1WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image2Thresh = cv2.threshold(image2WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image3Thresh = cv2.threshold(image3WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image4Thresh = cv2.threshold(image4WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
 
         # take each individual bubbles and find pixel values of each bubble to find marked bubbles
 
@@ -573,6 +573,12 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
             Index2.append(myIndexVal2[0][0])
             Index3.append(myIndexVal3[0][0])
             Index4.append(myIndexVal4[0][0])
+
+        print("marked answers")
+        print(Index1)
+        print(Index2)
+        print(Index3)
+        print(Index4)
 
         # grading
         grading1 = []
