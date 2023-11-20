@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,9 +22,6 @@ class AddMarkingSheet extends StatelessWidget {
     projectFolderDir = rProjectFolderDir;
     originalImageDir = rOriginalImageDir;
     processedImageDir = rProcessedImageDir;
-    print("index passed to third screen: $mcqSheetFormatIndex"); //test
-    print("image directory in answer page: $originalImageDir");
-    print("project name in answer page: $projectName");
   }
 
   //backend link --------------------------------------------------------------
@@ -48,13 +46,6 @@ class AddMarkingSheet extends StatelessWidget {
       if (response.statusCode == 200) {
         List<Map<String, dynamic>> data =
             List<Map<String, dynamic>>.from(json.decode(response.body));
-
-        // for (var entry in data) {
-        //   String imageName = entry['imageName'];
-        //   int totalScore = entry['totalScore'];
-
-        //   print('Image Name: $imageName, Total Score: $totalScore');
-        // }
       } else {
         // Handle errors here
         print('Error: ${response.statusCode}');
@@ -64,7 +55,6 @@ class AddMarkingSheet extends StatelessWidget {
       print('Exception: $e');
     }
   }
-  //---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +64,8 @@ class AddMarkingSheet extends StatelessWidget {
   Scaffold body() {
     int cols = 0;
     int rows = 0;
+
+    //set rows and columns for entering correct answers according to answer sheet type
     switch (mcqSheetFormatIndex) {
       case 0:
         {
@@ -106,10 +98,9 @@ class AddMarkingSheet extends StatelessWidget {
         height: 1024,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(
-                "Photos/newprojectBack.jpg")), // Replace with your image asset
+            image: FileImage(File("Photos/newprojectBack.jpg")),
             opacity: 220,
-            fit: BoxFit.fill, // Adjust the fit as needed
+            fit: BoxFit.fill,
           ),
         ),
         child: Row(
@@ -167,7 +158,12 @@ class AddMarkingSheet extends StatelessWidget {
                                   counterText: '',
                                 ),
                                 maxLength:
-                                    1, // Restrict input to a single digit (1-5)
+                                    1, // Restrict input to a single digit
+                                inputFormatters: [
+                                  //allow only 1 to 5 values on text field
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp('[1-5]'))
+                                ],
                                 onChanged: (value) {
                                   correctAnswerList[i * cols + j] =
                                       int.parse(value);
@@ -255,7 +251,7 @@ class AddMarkingSheet extends StatelessWidget {
                                       ],
                                     );
                                   });
-                              sendFolderForProcessing(); //API calling
+                              sendFolderForProcessing();
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(

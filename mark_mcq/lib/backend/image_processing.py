@@ -9,6 +9,7 @@ from openpyxl import load_workbook
 app = Flask(__name__)
 
 @app.route('/process_folder', methods=['POST'])
+
 def process_folder():
     data = request.json  # Receive JSON data with the folder path
     project_folder_path = data['project_folder_path']
@@ -18,14 +19,9 @@ def process_folder():
     processed_image_folder = data['processed_image_folder']
     folder_path = data['original_image_path']
 
-    print("you are in python file")
-    print(correct_answers)
-    print(project_name)
 
     for i in range(len(correct_answers)):
         correct_answers[i] -= 1
-    
-    print(correct_answers)
 
     if not folder_path:
         return jsonify({"error": "Folder path not provided"})
@@ -47,9 +43,6 @@ def process_folder():
                 result= process_image_4col(image_path,project_folder_path,correct_answers,filename,project_name)
             elif paper_type==2:
                 result = process_image_2col(image_path,project_folder_path,correct_answers,filename,project_name)
-
-    #         # Append image name and total score to the scores list
-    #         scores.append({"imageName": filename, "totalScore": result["TotalScore"]})
 
     return jsonify()
 
@@ -247,7 +240,6 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
                 countRow += 1
                 countCol = 0
 
-        # print(myPixelVal)
 
         # Finding index values of markings
         myIndex = []
@@ -279,12 +271,7 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
         )
 
         new_image_path = os.path.join(folder_path, "processed images", os.path.basename(image_path))
-        cv2.imwrite(new_image_path, imgResult)
-
-        #cv2.imshow("Markings ", imgResult)
-
-
-    #cv2.waitKey(0)
+        cv2.imwrite(new_image_path, imgResult) #save to processed images
 
 def process_image_4col(image_path,folder_path,correct_answers,file_name,project_name):
 
@@ -367,12 +354,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
     ansCol2 = correct_answers[10:20]  # answers for column 2
     ansCol3 = correct_answers[20:30]  # answers for column 3
     ansCol4 = correct_answers[30:40]   # answers for column 4
-    print("seperated columns")
-    print(ansCol1)
-    print(ansCol2)
-    print(ansCol3)
-    print(ansCol4)
-    print("seperated columns")
 
     # assigning path to a variables
     img = cv2.imread(image_path)
@@ -574,12 +555,6 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
             Index3.append(myIndexVal3[0][0])
             Index4.append(myIndexVal4[0][0])
 
-        print("marked answers")
-        print(Index1)
-        print(Index2)
-        print(Index3)
-        print(Index4)
-
         # grading
         grading1 = []
         grading2 = []
@@ -616,16 +591,9 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
         score3 = sum(grading3)
         score4 = sum(grading4)
 
-        #TotalScore = (score1 + score2 + score3 + score4) / (questionsPerCol * 4) * 100
+
         TotalScore = (score1+score2+ score3 + score4)
-        #/(questionsPerCol*4)*100
         update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
-
-        # result = {
-        #     "TotalScore": TotalScore
-        # }
-
-        # return result
 
 def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
     ####parameters

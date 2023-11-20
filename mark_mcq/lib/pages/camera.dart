@@ -15,17 +15,14 @@ String projectFolderDir = '';
 String projectName = '';
 
 class CameraSelect extends StatefulWidget {
-  /// Default Constructor
-
   CameraSelect(String rProjectName, String rProjectFolderDir,
       String rOriginalImageDir, String rProcessedImageDir, int index,
       {super.key}) {
-    originalImageDir = rOriginalImageDir; //txt;
+    originalImageDir = rOriginalImageDir;
     processedImageDir = rProcessedImageDir;
     projectFolderDir = rProjectFolderDir;
     projectName = rProjectName;
     mcqSheetFormatIndex = index;
-    print("index passed to second screen: $mcqSheetFormatIndex"); //test
   }
 
   @override
@@ -182,7 +179,6 @@ class _CameraSelectState extends State<CameraSelect> {
     final fileName = 'image_$timestamp.jpg';
     final imageDir = '$originalImageDir/$fileName';
     await imageFile.saveTo(imageDir);
-    // Use the imageFile for further processing or display
     setState(() {
       _lastImagePath = imageDir; // Update the _lastImagePath
     });
@@ -247,9 +243,6 @@ class _CameraSelectState extends State<CameraSelect> {
     File oldFile = File(oldPath);
     if (await oldFile.exists()) {
       File newFile = await oldFile.rename('$newPath.jpg');
-      print('File renamed from $oldPath to $newPath');
-    } else {
-      print('File does not exist at $oldPath');
     }
     _lastImagePath = newPath;
   }
@@ -266,10 +259,9 @@ class _CameraSelectState extends State<CameraSelect> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: FileImage(File(
-                  "Photos/newprojectBack.jpg")), // Replace with your image asset
+              image: FileImage(File("Photos/newprojectBack.jpg")),
               opacity: 220,
-              fit: BoxFit.fill, // Adjust the fit as needed
+              fit: BoxFit.fill,
             ),
           ),
           child: Row(
@@ -294,6 +286,7 @@ class _CameraSelectState extends State<CameraSelect> {
                               Builder(builder: (context) {
                                 return ElevatedButton(
                                   onPressed: () {
+                                    _disposeCurrentCamera();
                                     Navigator.of(context)
                                         .push(MaterialPageRoute(
                                       builder: (context) => const NewProject(),
@@ -307,13 +300,13 @@ class _CameraSelectState extends State<CameraSelect> {
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround, // You can adjust alignment as needed
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       Icon(
                                         Icons.arrow_back_rounded,
-                                        color: Color.fromARGB(255, 255, 255,
-                                            255), // You can customize the icon color
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
                                         size: 20,
                                       ),
                                     ],
@@ -339,18 +332,15 @@ class _CameraSelectState extends State<CameraSelect> {
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .center, // You can adjust alignment as needed
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
                                         Icons.switch_camera_outlined,
-                                        color: Colors
-                                            .white, // You can customize the icon color
+                                        color: Colors.white,
                                         size: 20,
                                       ),
                                       SizedBox(
-                                        width:
-                                            10, // Adjust the spacing between the icon and text
+                                        width: 10,
                                       ),
                                       Text(
                                         'Switch Camera',
@@ -431,13 +421,11 @@ class _CameraSelectState extends State<CameraSelect> {
                                 ),
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .center, // You can adjust alignment as needed
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
                                       Icons.refresh_outlined,
-                                      color: Color.fromARGB(255, 0, 0,
-                                          0), // You can customize the icon color
+                                      color: Color.fromARGB(255, 0, 0, 0),
                                       size: 20,
                                     ),
                                     SizedBox(
@@ -474,18 +462,15 @@ class _CameraSelectState extends State<CameraSelect> {
                             ),
                             child: const Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // You can adjust alignment as needed
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.add_a_photo_outlined,
-                                  color: Colors
-                                      .white, // You can customize the icon color
+                                  color: Colors.white,
                                   size: 20,
                                 ),
                                 SizedBox(
-                                  width:
-                                      10, // Adjust the spacing between the icon and text
+                                  width: 10,
                                 ),
                                 Text(
                                   'Capture',
@@ -518,7 +503,6 @@ class _CameraSelectState extends State<CameraSelect> {
                       height: 15,
                     ),
                     Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Container(
                           width: 510,
@@ -545,17 +529,14 @@ class _CameraSelectState extends State<CameraSelect> {
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.02,
                             )),
-                        const SizedBox(
-                            width:
-                                10), // Add some spacing between the text and the input field
+                        const SizedBox(width: 10),
                         Container(
                           height: 30,
-                          width: 250, // Set the desired height
+                          width: 250,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(
-                                255, 185, 185, 185), // Set the background color
-                            borderRadius: BorderRadius.circular(
-                                6), // Set border radius if needed
+                                255, 185, 185, 185), // background color
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: TextField(
                             onChanged: (value) {
@@ -566,14 +547,12 @@ class _CameraSelectState extends State<CameraSelect> {
                               fontFamily: 'Roboto',
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.02,
-                              color: Color.fromARGB(
-                                  255, 0, 0, 0), // Set text color
+                              color: Color.fromARGB(255, 0, 0, 0),
                             ),
                             decoration: const InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(10, -8, 0, 10),
-                              border:
-                                  InputBorder.none, // Remove the default border
+                              border: InputBorder.none,
                             ),
                           ),
                         ),
@@ -589,12 +568,10 @@ class _CameraSelectState extends State<CameraSelect> {
                           ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment
-                                .center, // You can adjust alignment as needed
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width:
-                                    5, // Adjust the spacing between the icon and text
+                                width: 5,
                               ),
                               Text(
                                 'Add',
@@ -645,18 +622,15 @@ class _CameraSelectState extends State<CameraSelect> {
                             ),
                             child: const Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // You can adjust alignment as needed
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.add,
-                                  color: Colors
-                                      .white, // You can customize the icon color
+                                  color: Colors.white,
                                   size: 20,
                                 ),
                                 SizedBox(
-                                  width:
-                                      10, // Adjust the spacing between the icon and text
+                                  width: 10,
                                 ),
                                 Text(
                                   'Add Marking Sheet',
