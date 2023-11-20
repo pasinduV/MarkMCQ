@@ -6,14 +6,23 @@ import 'dart:convert';
 
 class AddMarkingSheet extends StatelessWidget {
   int mcqSheetFormatIndex = 0;
+  String projectName = '';
+  String projectFolderDir = '';
   String originalImageDir = '';
-  List<int>? correctAnswerListToPass = null;
+  String processedImageDir = '';
+  List<int>? correctAnswerListToPass;
 
-  AddMarkingSheet(int index, String originalImageDirPath, {super.key}) {
+  AddMarkingSheet(String rProjectName, String rProjectFolderDir,
+      String rOriginalImageDir, String rProcessedImageDir, int index,
+      {super.key}) {
     mcqSheetFormatIndex = index;
-    originalImageDir = originalImageDirPath;
+    projectName = rProjectName;
+    projectFolderDir = rProjectFolderDir;
+    originalImageDir = rOriginalImageDir;
+    processedImageDir = rProcessedImageDir;
     print("index passed to third screen: $mcqSheetFormatIndex"); //test
-    print("image directory in answer page: $originalImageDirPath");
+    print("image directory in answer page: $originalImageDir");
+    print("project name in answer page: $projectName");
   }
 
   //backend link --------------------------------------------------------------
@@ -26,9 +35,12 @@ class AddMarkingSheet extends StatelessWidget {
           "Content-Type": "application/json",
         },
         body: json.encode({
-          "folder_path": originalImageDir,
+          "project_folder_path": projectFolderDir,
           "paper_type_index": mcqSheetFormatIndex,
           "answer_list": correctAnswerListToPass,
+          "project_name": projectName,
+          "processed_image_folder": processedImageDir,
+          "original_image_path": originalImageDir,
         }),
       );
 
@@ -36,12 +48,12 @@ class AddMarkingSheet extends StatelessWidget {
         List<Map<String, dynamic>> data =
             List<Map<String, dynamic>>.from(json.decode(response.body));
 
-        for (var entry in data) {
-          String imageName = entry['imageName'];
-          int totalScore = entry['totalScore'];
+        // for (var entry in data) {
+        //   String imageName = entry['imageName'];
+        //   int totalScore = entry['totalScore'];
 
-          print('Image Name: $imageName, Total Score: $totalScore');
-        }
+        //   print('Image Name: $imageName, Total Score: $totalScore');
+        // }
       } else {
         // Handle errors here
         print('Error: ${response.statusCode}');
