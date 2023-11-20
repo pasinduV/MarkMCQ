@@ -121,6 +121,19 @@ class AddMarkingSheet extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Container(
+                    height: 30,
+                    child: const Text(
+                      'Add Answers',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontSize: 20,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.02,
+                      ),
+                    ),
+                  ),
                   // MCQ answer input section
                   for (int i = 0; i < rows; i++)
                     Row(
@@ -183,14 +196,66 @@ class AddMarkingSheet extends StatelessWidget {
                         child: Builder(builder: (context) {
                           return ElevatedButton(
                             onPressed: () {
-                              //print for test
-                              for (int i = 0; i < rows; i++) {
-                                for (int j = 0; j < cols; j++) {
-                                  print(
-                                      "${i * cols + j + 1}: ${correctAnswerList[i * cols + j]}");
-                                }
-                              }
-                              // Navigate to the AddMarkingShhet screen
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Completed'),
+                                      icon: const Icon(Icons.done_all),
+                                      //content: Text('This is a popup window'),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(
+                                              child: const Text(
+                                                'Home',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.02,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const HomePage(),
+                                                ));
+                                              },
+                                            ),
+                                            const SizedBox(
+                                                width:
+                                                    30), // Adjust the space between buttons
+                                            TextButton(
+                                              child: const Text(
+                                                'Open Excel Sheet',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w600,
+                                                  letterSpacing: 0.02,
+                                                ),
+                                              ),
+                                              onPressed: () async {
+                                                String filePath =
+                                                    '$projectFolderDir\\$projectName.xlsx';
+                                                await OpenFile.open(filePath);
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const HomePage(),
+                                                ));
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
+                              sendFolderForProcessing(); //API calling
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
@@ -203,7 +268,7 @@ class AddMarkingSheet extends StatelessWidget {
                                   .center, // You can adjust alignment as needed
                               children: [
                                 Icon(
-                                  Icons.add_a_photo_outlined,
+                                  Icons.settings_outlined,
                                   color: Colors
                                       .white, // You can customize the icon color
                                   size: 20,
@@ -213,108 +278,9 @@ class AddMarkingSheet extends StatelessWidget {
                                       10, // Adjust the spacing between the icon and text
                                 ),
                                 Text(
-                                  'Capture',
+                                  'Proceed',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 14,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.02,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        width: 120,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black38, // Border color
-                            width: 2.0, // Border width
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(4), // Border radius
-                        ),
-                        child: Builder(builder: (context) {
-                          return ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Completed'),
-                                      //content: Text('This is a popup window'),
-                                      actions: [
-                                        TextButton(
-                                          child: Text('Home'),
-                                          onPressed: () {
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomePage(),
-                                            ));
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('Open Excel Sheet'),
-                                          onPressed: () async {
-                                            String filePath =
-                                                '$projectFolderDir\\$projectName.xlsx';
-                                            await OpenFile.open(filePath);
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomePage(),
-                                            ));
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  });
-                              sendFolderForProcessing(); //API calling
-                            },
-                            style: ButtonStyle(
-                              overlayColor: MaterialStateColor.resolveWith(
-                                (states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.blue
-                                        .shade200; // Change the color when the button is pressed
-                                  }
-                                  return Colors.blue
-                                      .shade100; // Use the default color otherwise
-                                },
-                              ),
-                              minimumSize: MaterialStateProperty.all(const Size(
-                                  50, 50)), // Set the button height to 30
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromRGBO(255, 255, 255, 1),
-                              ),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // You can adjust alignment as needed
-                              children: [
-                                Icon(
-                                  Icons.wifi_protected_setup_sharp,
-                                  color: Color.fromARGB(255, 0, 0,
-                                      0), // You can customize the icon color
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width:
-                                      10, // Adjust the spacing between the icon and text
-                                ),
-                                Text(
-                                  'Process',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
                                     fontSize: 14,
                                     fontFamily: 'Roboto',
                                     fontWeight: FontWeight.w600,
