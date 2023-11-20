@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'show_marked_sheets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'home.dart';
+import 'package:open_file/open_file.dart';
 
 class AddMarkingSheet extends StatelessWidget {
   int mcqSheetFormatIndex = 0;
@@ -243,11 +244,40 @@ class AddMarkingSheet extends StatelessWidget {
                         child: Builder(builder: (context) {
                           return ElevatedButton(
                             onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Completed'),
+                                      //content: Text('This is a popup window'),
+                                      actions: [
+                                        TextButton(
+                                          child: Text('Home'),
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HomePage(),
+                                            ));
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('Open Excel Sheet'),
+                                          onPressed: () async {
+                                            String filePath =
+                                                '$projectFolderDir\\$projectName.xlsx';
+                                            await OpenFile.open(filePath);
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HomePage(),
+                                            ));
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
                               sendFolderForProcessing(); //API calling
-                              // Use a Builder to access the context
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //   builder: (context) => const ShowMarkedSheets(),
-                              // ));
                             },
                             style: ButtonStyle(
                               overlayColor: MaterialStateColor.resolveWith(
