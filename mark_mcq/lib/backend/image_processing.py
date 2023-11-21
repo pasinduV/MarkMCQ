@@ -54,7 +54,7 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
     if not os.path.exists(image_path):
         return jsonify({"error": "Image file not found"})
     
-    rotate_image(image_path,-90)
+    rotate_image(image_path,90)
     
     ####parameters
     widthImg = 230
@@ -599,6 +599,14 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
         update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
 
 def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
+    
+    if not image_path:
+        return jsonify({"error": "Image path not provided"})
+
+    if not os.path.exists(image_path):
+        return jsonify({"error": "Image file not found"})
+    
+    rotate_image(image_path,-90)
     ####parameters
     widthImage = 300
     heightImg = 700
