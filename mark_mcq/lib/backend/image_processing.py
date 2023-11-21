@@ -5,6 +5,7 @@ import os
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl import load_workbook
+from PIL import Image, ImageOps
 
 app = Flask(__name__)
 
@@ -52,6 +53,8 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
 
     if not os.path.exists(image_path):
         return jsonify({"error": "Image file not found"})
+    
+    rotate_image(image_path,90)
     
     ####parameters
     widthImg = 230
@@ -596,6 +599,14 @@ def process_image_4col(image_path,folder_path,correct_answers,file_name,project_
         update_excel_sheet(folder_path,file_name,TotalScore,project_name)#append values to excel sheet
 
 def process_image_2col(image_path,folder_path,correct_answers,file_name,project_name):
+    
+    if not image_path:
+        return jsonify({"error": "Image path not provided"})
+
+    if not os.path.exists(image_path):
+        return jsonify({"error": "Image file not found"})
+    
+    rotate_image(image_path,-90)
     ####parameters
     widthImage = 300
     heightImg = 700
@@ -837,6 +848,27 @@ def make_new_excel_sheet(folder_path,project_name):
 
     workbook.save(path)
     workbook.close()   
+
+def rotate_image(image_path,rotate_degree):
+    # Open the image file
+    image = Image.open(image_path)
+
+    # Rotate the image
+    rotated_image = image.rotate(rotate_degree, expand=True)  # Rotate by 90 degrees clockwise, expand=True preserves the full rotated image
+
+    # Create a new blank canvas with dimensions of the rotated image
+    new_image = Image.new("RGB", rotated_image.size, (255, 255, 255))  # You can adjust the background color if desired
+
+    # Paste the rotated image onto the new canvas
+    new_image.paste(rotated_image, (0, 0))
+
+    # Save the rotated image (replacing the original image)
+    new_image.save(image_path)
+
+    # Close the image files
+    image.close()
+    rotated_image.close()
+    new_image.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

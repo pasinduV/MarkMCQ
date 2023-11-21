@@ -108,7 +108,7 @@ class AddMarkingSheet extends StatelessWidget {
           children: [
             SizedBox(
               width: 600,
-              height: 450,
+              height: 500,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

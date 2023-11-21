@@ -124,8 +124,6 @@ class _NewProjectState extends State<NewProject> {
         final String fileName = Uri.file(_images[i].path).pathSegments.last;
         final File localImage = await _images[i].copy(
             '$path/$fileName'); // Copying the image to the directory with the generated file name.
-        print(
-            'Image $i saved to $path/$fileName'); // Printing a message to indicate that the image has been saved.
       }
     }
   }
