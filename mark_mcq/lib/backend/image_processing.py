@@ -54,7 +54,7 @@ def process_image_1col(image_path,folder_path,correct_answers,file_name,project_
     if not os.path.exists(image_path):
         return jsonify({"error": "Image file not found"})
     
-    rotate_image(image_path,90)
+    rotate_image(image_path,-90)
     
     ####parameters
     widthImg = 230
