@@ -140,29 +140,39 @@ def process_image_1col(
         return bubbleArray
 
     # function to mark correct answers in the answer sheet
-    def markAnswersFunction(img, myIndex, grading, ans, questions, choices):
-        secW = int(img.shape[1] / choices)
-        secH = int(img.shape[0] / questions)
+    def markAnswersFunction(img, IndexOfmarking, grading, answer, questions, choices):
+        widthOfBox = int(img.shape[1] / choices)
+        heightOfBox = int(img.shape[0] / questions)
 
         for x in range(25):
-            myAns = myIndex[x]
-            cX = (myAns * secW) + secW // 2
-            cY = (x * secH) + secH // 2
+            ans = IndexOfmarking[x]
+            centerXlocation = (ans * widthOfBox) + widthOfBox // 2
+            centerYlocation = (x * heightOfBox) + heightOfBox // 2
 
             if grading[x] == 1:
-                myColor = (0, 255, 0)
+                MarkColor = (0, 255, 0)  # if answer is correct mark it from green
             else:
-                myColor = (0, 0, 255)
-                correctAns = ans[x]
+                MarkColor = (0, 0, 255)  # if answer is wrong mark it from red
+                MarkCorrectAnsColor = (
+                    0,
+                    255,
+                    0,
+                )  # mark correct answer of wrong one in green
+                IndexOfCorrectAns = answer[x]
                 cv2.circle(
                     img,
-                    ((correctAns * secW) + secW // 2, (x * secH) + secH // 2),
+                    (
+                        (IndexOfCorrectAns * widthOfBox) + widthOfBox // 2,
+                        (x * heightOfBox) + heightOfBox // 2,
+                    ),
                     10,
-                    (0, 255, 0),
+                    MarkCorrectAnsColor,
                     cv2.FILLED,
                 )
 
-            cv2.circle(img, (cX, cY), 10, myColor, cv2.FILLED)
+            cv2.circle(
+                img, (centerXlocation, centerYlocation), 10, MarkColor, cv2.FILLED
+            )
 
         return img
 
