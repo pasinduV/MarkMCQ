@@ -74,7 +74,7 @@ def process_image_1col(
     if not os.path.exists(image_path):
         return jsonify({"error": "Image file not found"})
 
-    rotate_image(image_path, -90)
+    #rotate_image(image_path, -90)
 
     ####parameters
     widthImage = 230
@@ -248,7 +248,7 @@ def process_image_1col(
         # convert img to grey
         image1WarpGrey = cv2.cvtColor(image1Warp, cv2.COLOR_BGR2GRAY)
         # apply thresold
-        image1Thresh = cv2.threshold(image1WarpGrey, 100, 250, cv2.THRESH_BINARY_INV)[1]
+        image1Thresh = cv2.threshold(image1WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
 
         # take each bubble and see how many pexel values are non-zero to find which is marked
         # devide image to a grid where each grid has one bubble
@@ -394,10 +394,12 @@ def process_image_4col(
     # 1) resize image
     img = cv2.resize(img, (widthImage, heightImage))
 
+
     # new image
     # take a copy of original image to draw contours and mark biggest contours
     imageContours = img.copy()
     imgBiggestContours = img.copy()
+
 
     # convert image to grey scale
     imageGrey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -406,6 +408,7 @@ def process_image_4col(
     imageBlur = cv2.GaussianBlur(imageGrey, (5, 5), 1)
     # size of kernel is 5*5
     # zigma-x value = 1
+
 
     # detect edges using imgcanny function
     # Finding the edges of the image
@@ -490,10 +493,10 @@ def process_image_4col(
         image3WarpGrey = cv2.cvtColor(image3Warp, cv2.COLOR_BGR2GRAY)
         image4WarpGrey = cv2.cvtColor(image4Warp, cv2.COLOR_BGR2GRAY)
 
-        image1Thresh = cv2.threshold(image1WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
-        image2Thresh = cv2.threshold(image2WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
-        image3Thresh = cv2.threshold(image3WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
-        image4Thresh = cv2.threshold(image4WarpGrey, 100, 300, cv2.THRESH_BINARY_INV)[1]
+        image1Thresh = cv2.threshold(image1WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
+        image2Thresh = cv2.threshold(image2WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
+        image3Thresh = cv2.threshold(image3WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
+        image4Thresh = cv2.threshold(image4WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
 
         # take each individual bubbles and find pixel values of each bubble to find marked bubbles
 
@@ -781,8 +784,8 @@ def process_image_2col(
         image1WarpGrey = cv2.cvtColor(image1Warp, cv2.COLOR_BGR2GRAY)
         image2WarpGrey = cv2.cvtColor(image2Warp, cv2.COLOR_BGR2GRAY)
 
-        image1Thresh = cv2.threshold(image1WarpGrey, 130, 300, cv2.THRESH_BINARY_INV)[1]
-        image2Thresh = cv2.threshold(image2WarpGrey, 130, 300, cv2.THRESH_BINARY_INV)[1]
+        image1Thresh = cv2.threshold(image1WarpGrey, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
+        image2Thresh = cv2.threshold(image2WarpGrey, 10, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)[1]
 
         # take each individual bubbles and find pixel values of each bubble to find marked bubbles
 
